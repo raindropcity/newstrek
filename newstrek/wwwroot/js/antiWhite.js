@@ -27,6 +27,25 @@
     }
 })
 
+function attachDocClickListener() {
+    const lookupOption = document.querySelector(".lookup-option")
+
+    if (lookupOption) {
+        /* 等一下再掛document的click監聽器，不然click事件與mouseup事件會衝突(click就像是比較快的mouseup)，
+        導致"lookup-option"元素剛被create馬上就被remove */
+        setTimeout(() => {
+            document.addEventListener('click', handleDocumentClick);
+        }, 100)
+    }
+    
+    function handleDocumentClick(event) {
+        if (!event.target.classList.contains('lookup-option')) {
+            lookupOption.remove();
+            document.removeEventListener('click', handleDocumentClick)
+        }
+    }
+}
+
 function attachLookupListeners() {
     const article = document.querySelector('.blog-text')
 
@@ -57,6 +76,8 @@ function showLookupOption(x, y, selectedText) {
 
     // Append the option to the document body
     document.body.appendChild(lookupOption);
+
+    attachDocClickListener()
 }
 
 function performLookup(vocabulary) {
