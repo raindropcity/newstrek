@@ -1,0 +1,248 @@
+.ref-2 .blog-text span {
+  display: block;
+}
+.ref-2 .blog-text .topics_container,
+.ref-2 .blog-text .HYPHENATION,
+.ref-2 .blog-text .PronCodes,
+.ref-2 .blog-text .LEVEL,
+.ref-2 .blog-text .FREQ,
+.ref-2 .blog-text .speaker,
+.ref-2 .blog-text script {
+  display: none;
+}
+.ref-2 .blog-text .ldoceEntry:has(.newline) {
+  display: none;
+}
+.ref-2 .blog-text .Head {
+  display: flex;
+  align-items: center;
+  border-bottom: 3px #178286 solid;
+}
+.ref-2 .blog-text .Head .HWD {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-right: 0.5rem;
+}
+.ref-2 .blog-text .Head .POS {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+.ref-2 .blog-text .Head .GRAM {
+  display: inline-flex;
+  margin-left: 1rem;
+}
+.ref-2 .blog-text .Sense {
+  line-height: 2rem;
+  margin-top: 0.5rem;
+}
+.ref-2 .blog-text .Sense .sensenum {
+  display: inline;
+}
+.ref-2 .blog-text .Sense .SIGNPOST {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.3rem;
+  font-style: italic;
+  font-weight: 600;
+  color: #178286;
+  background-color: #b2becd;
+  border-radius: 10px;
+  padding: 0 0.3rem;
+}
+.ref-2 .blog-text .Sense .REGISTERLAB {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.3rem;
+  font-style: italic;
+  font-weight: 600;
+  color: #178286;
+  background-color: #b2becd;
+  border-radius: 10px;
+  padding: 0 0.3rem;
+}
+.ref-2 .blog-text .Sense .ACTIV {
+  display: none;
+}
+.ref-2 .blog-text .Sense img {
+  max-width: 10rem;
+}
+.ref-2 .blog-text .Sense .GRAM {
+  display: inline-flex;
+  margin-left: 1rem;
+}
+.ref-2 .blog-text .Sense .Subsense .DEF {
+  display: inline;
+}
+.ref-2 .blog-text .Sense .Subsense .GEO {
+  display: none;
+}
+.ref-2 .blog-text .Sense .FIELD {
+  display: none;
+}
+.ref-2 .blog-text .Sense .DEF {
+  display: inline;
+  font-size: 1.3rem;
+}
+.ref-2 .blog-text .Sense .DEF a,
+.ref-2 .blog-text .Sense .DEF span {
+  display: inline;
+}
+.ref-2 .blog-text .Sense .DEF .SUFFIX {
+  margin-left: -0.4rem;
+}
+.ref-2 .blog-text .Sense .GramExa .PROPFORM {
+  font-size: 1.3rem;
+}
+.ref-2 .blog-text .Sense .EXAMPLE {
+  display: inline-block;
+  padding: 0 0.3rem;
+  margin: 0 0.3rem;
+  color: #b2becd;
+  border-bottom: 1.5px #178286 solid;
+}
+.ref-2 .blog-text .Sense .EXAMPLE .Play {
+  display: none;
+}
+.ref-2 .blog-text .Sense .EXAMPLE .GLOSS {
+  display: inline;
+}
+.ref-2 .blog-text .Sense .EXAMPLE .GLOSS span {
+  display: inline;
+}
+.ref-2 .blog-text .Sense .Crossref {
+  display: inline-flex;
+}
+.ref-2 .blog-text .Sense .Crossref .crossRef {
+  display: flex;
+  align-items: center;
+  padding: 0 0.3rem;
+}
+.ref-2 .blog-text .Sense .Thesref {
+  display: none;
+}
+.ref-2 .blog-text .Tail {
+  line-height: 2rem;
+}
+.ref-2 .blog-text .Tail .RunOn {
+  display: flex;
+  align-items: center;
+}
+.ref-2 .blog-text .Tail .RunOn .DERIV {
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+.ref-2 .blog-text .Tail .RunOn .POS {
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+.ref-2 .blog-text .Tail .RunOn span {
+  margin-left: 0.2rem;
+  margin-right: 0.2rem;
+}
+.ref-2 .blog-text .Tail .Crossref span {
+  display: inline;
+}
+.ref-2 .blog-text .Tail .Crossref .REFHWD {
+  margin-left: 0.3rem;
+}
+.ref-2 .blog-text .Tail .Crossref .crossRef {
+  display: inline-flex;
+}
+.ref-2 .blog-text .Tail .Crossref .REFHOMNUM,
+.ref-2 .blog-text .Tail .Crossref .REFSENSENUM {
+  display: none;
+}
+.ref-2 .blog-text .Tail .ColloBox {
+  border: #178286 1px solid;
+  border-radius: 5px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+.ref-2 .blog-text .Tail .ColloBox .heading {
+  font-size: 1.4rem;
+  font-weight: 700;
+  padding: 0 0.4rem;
+  display: inline;
+  border-bottom: 3px #178286 solid;
+}
+.ref-2 .blog-text .Tail .ColloBox .HEADING {
+  display: none;
+}
+.ref-2 .blog-text .Tail .ColloBox .Section {
+  margin-top: 1rem;
+}
+.ref-2 .blog-text .Tail .ColloBox .Section .SECHEADING {
+  display: inline;
+  padding: 0.3rem;
+  background-color: #178286;
+  border-radius: 5px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 0.5rem;
+}
+.ref-2 .blog-text .Tail .ColloBox .Collocate .COLLOC {
+  display: inline-flex;
+  align-items: center;
+}
+.ref-2 .blog-text .Tail .ColloBox .Collocate .COLLGLOSS a,
+.ref-2 .blog-text .Tail .ColloBox .Collocate .COLLGLOSS span {
+  display: inline;
+}
+.ref-2 .blog-text .Tail .ColloBox .Collocate .EXAMPLE {
+  display: inline-flex;
+  align-items: center;
+  color: #b2becd;
+  border-bottom: 1.5px #178286 solid;
+  margin-left: 0.5rem;
+  padding: 0 0.3rem;
+}
+.ref-2 .blog-text .Tail .ColloBox .Collocate .GEO {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0.5rem;
+  font-weight: 300;
+  color: #178286;
+}
+.ref-2 .blog-text .Tail .ColloBox .Collocate .Variant a,
+.ref-2 .blog-text .Tail .ColloBox .Collocate .Variant span {
+  display: inline;
+}
+.ref-2 .blog-text .Tail .ThesBox {
+  line-height: 2rem;
+  border: #178286 1px solid;
+  border-radius: 5px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+.ref-2 .blog-text .Tail .ThesBox .heading {
+  font-size: 1.4rem;
+  font-weight: 700;
+  padding: 0 0.4rem;
+  display: inline;
+  border-bottom: 3px #178286 solid;
+}
+.ref-2 .blog-text .Tail .ThesBox .Section .Exponent {
+  margin: 0.5rem auto;
+}
+.ref-2 .blog-text .Tail .ThesBox .Section .Exponent span {
+  display: inline-flex;
+}
+.ref-2 .blog-text .Tail .ThesBox .Section .Exponent .EXP {
+  font-size: 1.2rem;
+  font-weight: 500;
+  padding: 0 0.3rem;
+  margin-right: 0.5rem;
+  background-color: #178286;
+  border-radius: 5px;
+}
+.ref-2 .blog-text .Tail .ThesBox .Section .Exponent .DEF {
+  display: block;
+}
+.ref-2 .blog-text .Tail .ThesBox .Section .Exponent .EXAMPLE {
+  display: inline-flex;
+  color: #b2becd;
+  border-bottom: 1.5px #178286 solid;
+  margin-left: 0.5rem;
+  padding: 0 0.3rem;
+}/*# sourceMappingURL=longman.css.map */

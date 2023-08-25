@@ -1,0 +1,59 @@
+﻿/*@import url("https://fonts.googleapis.com/css?family=Merriweather:400,400i,700");*/
+
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+img {
+    width: 100%;
+    display: block;
+}
+
+p {
+    line-height: 1.3;
+}
+
+.two-thirds-image-left-one-third-text-right {
+    position: relative;
+}
+
+.two-thirds-image-left-one-third-text-right .text {
+    padding: 1rem;
+}
+
+.two-thirds-image-left-one-third-text-right .text .title {
+    font-size: 3rem;
+    margin: 2rem 0;
+}
+
+.two-thirds-image-left-one-third-text-right .text .lead {
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.2rem;
+    margin: 1rem 0 3rem;
+    line-height: 1.5;
+}
+
+.one-by-one {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 0.5rem;
+    margin: 0.5rem;
+}
+
+.wide-tall-cap-left {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 0.5rem;
+    margin: 0.5rem;
+}
+
+.three-col-text {
+    columns: 3;
+    column-width: 300px;
+    padding: 1rem;
+}
+
+    .three-col-text p:first-child {
+        margin-top: 0;
+    }

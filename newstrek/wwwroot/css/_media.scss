@@ -1,0 +1,220 @@
+// 總共寫了600px、850px、1200px的media query。因為是由小到大在寫，因此若有各尺寸都使用到的選擇器，會需要加上!important，否則由於1200px寫在後，會蓋掉前面600px所設定的東西。下次可以試著由大到小來寫media query。
+
+@media screen and (max-width: 600px) {
+
+  .section {
+    padding: 2rem 2.5rem !important;
+  }
+
+  .theme-btn {
+    width: 50px;
+    height: 50px;
+  }
+
+  // 首頁的media query發生較早，在螢幕寬度小於850px時就發生，寫在下面的@media
+
+  // 各頁面標題
+  .main-title {
+    h2 {
+      font-size: 2rem !important;
+
+      span {
+        font-size: 2rem !important;
+      }
+    }
+  }
+
+  .controlls {
+    .control {
+      margin: 1rem .3rem !important;
+    }
+  }
+
+  // about頁面的media query發生較早，在螢幕寬度小於850px時就發生，寫在下面的@media
+
+  // portfolio頁面的media query發生較早，在螢幕寬度小於850px時就發生，寫在下面的@media
+
+  // blog頁面(My Notes)的media query發生較早，在螢幕寬度小於850px時就發生，寫在下面的@media
+
+  // contact頁面的media query發生較早，在螢幕寬度小於1200px時就發生，寫在下面的@media
+}
+
+@media screen and (max-width: 850px) {
+  .section {
+    padding: 2.5rem 3rem !important;
+  }
+
+  // 首頁
+  header {
+    padding: 0 !important;
+  }
+
+  .header-content {
+    grid-template-columns: 1fr; // 將grid從二欄減為一欄，做出整體佈局「由橫轉直」的效果
+    padding-bottom: 6rem;
+
+    .left-header {
+      .h-shape {
+        display: none;
+      }
+
+      .left-arrow {
+        margin: 0;
+        padding-left: .5rem;
+      }
+
+      .right-arrow {
+        margin: 0;
+        padding-right: .5rem;
+      }
+
+      .image {
+        margin: 0 auto;
+        width: 90%;
+      }
+    }
+
+    .right-header {
+      grid-row: 1; // 為grid-row-start與grid-row-end的縮寫。grid-row: 1 代表將此元素放到第一欄，並且此元素所占寬度為一個row的寬度。
+      // 原本的左欄應該要在上面，但因為.right-header中設定了grid-row，因此變成右欄在上。
+      width: 90%;
+      margin: 0 auto; // 左右置中
+      padding: 0 !important;
+
+      .name {
+        padding-top: 2rem;
+        font-size: 2.5rem;
+      }
+    }
+  }
+
+  // about頁面
+  .about-container {
+    grid-template-columns: 1fr;
+
+    .right-about {
+      grid-template-columns: 1fr;
+      padding-top: 2.5rem;
+    }
+
+    .left-about {
+      padding-right: 0;
+
+      h4 {
+        font-size: 1.5rem;
+      }
+
+      p {
+        padding-left: 0;
+      }
+    }
+  }
+
+  .about-stats {
+    .progress-bars {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .timeline {
+    grid-template-columns: 1fr;
+    padding-bottom: 6rem;
+  }
+
+  // portfolio頁面
+  .portfolios {
+    grid-template-columns: 1fr !important;
+    padding-bottom: 6rem;
+  }
+
+  // blog頁面(My Notes)
+  .blogs {
+    grid-template-columns: 1fr !important;
+    padding-bottom: 6rem;
+  }
+
+  // 按鈕
+  .controlls {
+    top: auto;
+    bottom: 0;
+    flex-direction: row;
+    justify-content: center;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    background-color: var(--color-grey-5);
+
+    .control {
+      margin: 1rem .8rem;
+    }
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .section {
+    padding: 7rem 11rem;
+  }
+
+  header {
+    padding: 3rem !important;
+  }
+
+  .header-content .right-header {
+    padding-right: 0;
+
+    h1 {
+      padding-right: 2.5rem;
+    }
+
+    p {
+      padding-right: 3rem;
+    }
+  }
+
+  // main title
+  .main-title {
+    h2 {
+      font-size: 4rem;
+
+      span {
+        font-size: 4rem;
+      }
+    }
+  }
+
+  // about頁面
+  .about-container {
+    grid-template-columns: 1fr;
+
+    .right-about {
+      padding-top: 2.5rem;
+    }
+  }
+
+  // portfolio頁面
+  .portfolios {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  // blogs頁面(My Notes)
+  .blogs {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  // contact頁面
+  .contact-content-con {
+    flex-direction: column;
+
+    .right-contact {
+      margin-left: 0;
+      margin-top: 2.5rem;
+
+      .i-c-2 {
+        :last-child {
+          margin-left: 0;
+          margin-top: 1.5rem;
+        }
+      }
+    }
+  }
+}

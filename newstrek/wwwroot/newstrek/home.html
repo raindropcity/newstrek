@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>NewsTrek</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/webster.css">
+    <link rel="stylesheet" href="../css/longman.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital@1&display=swap" rel="stylesheet">
+</head>
+
+<body class="main-content">
+    <header class="section sec1 header active" id="home">
+        <div class="header-content">
+            <div class="left-header">
+                <div class="h-shape"></div>
+                <div class="left-arrow">
+                    <i class="fas fa-angle-left"></i>
+                </div>
+                <div class="vocabulary ref-1 show-up">
+                    <div class="blog">
+                        <h3>Merriam Webster Dictionary</h3>
+                        <div class="blog-text">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="vocabulary ref-2 hidden">
+                    <div class="blog">
+                        <h3>Longman Dictionary of Contemporary English</h3>
+                        <div class="blog-text">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="vocabulary ref-3 hidden">
+                    <div class="blog">
+                        <h3>資料來源</h3>
+                        <div class="blog-text">
+                            <h4><span>red</span> :</h4>
+                            <p class="En-language">
+                                Software engineers explore the world without paper and pens. In the situation that
+                                needs
+                                to introduce the
+                                self-experience, it absolutely has to be in a cool way. Then I got rid of the
+                                paperwork
+                                and tried to build
+                                a website
+                                displaying myself. This project takes the advantage of MacLinz's online course
+                                . I learned many frontend skills built by SCSS, HTML, CSS & JS and didn't take
+                                the help of Bootstrap intentionally while constructing my own site. Of course, I
+                                tried
+                                to change some
+                                codes to make this
+                                site connect to the database MongoDB and run properly in Node.js
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-arrow">
+                    <i class="fas fa-angle-right"></i>
+                </div>
+            </div>
+            <div class="right-header">
+                <h1 class="name">
+                    Welcome to <span>NewsTrek</span><br>
+                    Let's learn English!
+                </h1>
+                <!-- search bar -->
+                <form id="search-bar" onsubmit="event.preventDefault();" role="search">
+                    <label for="search">Search for stuff</label>
+                    <input id="search" type="search" placeholder="Look Up words..." autofocus required />
+                    <button id="search-word-btn" type="submit">Go</button>
+                </form>
+                <p class="En-language">
+                    recommanded News<br>
+                    recommanded News<br>
+                    recommanded News<br>
+                    recommanded News<br>
+                </p>
+            </div>
+    </header>
+
+    <!-- 右側fixed button -->
+    <div class="controlls">
+        <a href="/newstrek/home.html" class="control control-1 active-btn" data-id="home">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="/newstrek/category.html" class="control control-4 active-btn" data-id="blogs">
+            <i class="far fa-newspaper"></i>
+        </a>
+        <a href="#" class="control control-3 active-btn" data-id="portfolio">
+            <i class="fas fa-briefcase"></i>
+        </a>
+        <a href="#" class="control control-2 active-btn" data-id="about">
+            <i class="fas fa-user"></i>
+        </a>
+        <a href="#" class="control control-5 active-btn" data-id="contact">
+            <i class="fas fa-envelope-open"></i>
+        </a>
+    </div>
+
+    <!-- 引用JS -->
+    <script src="../js/action.js"></script>
+    <script type="text/javascript">
+        const submitBtn = document.querySelector("#search-word-btn")
+
+        submitBtn.addEventListener('click', () => {
+            event.preventDefault();
+
+            const vocabulary = document.querySelector("#search").value
+            const defCard_1 = document.querySelector(".ref-1 .blog-text")
+            const defCard_2 = document.querySelector(".ref-2 .blog-text")
+
+            fetch(`/Dictionary/look-up-words-crawler-Merriam-Webster?word=${vocabulary}`)
+                .then(data => {
+                    data.text().then((content) => {
+                        console.log(content)
+                        defCard_1.innerHTML = content
+                    })
+                })
+                .catch(error => {
+                    console.error('Error in GET request to crwal vocabulary in Merriam Webster', error);
+                })
+
+            fetch(`/Dictionary/look-up-words-crawler-Longman?word=${vocabulary}`)
+                .then(data => {
+                    data.text().then((content) => {
+                        console.log(content)
+                        defCard_2.innerHTML = content
+                    })
+                })
+                .catch(error => {
+                    console.error('Error in GET request to crwal vocabulary in Longman', error);
+                })
+        })
+    </script>
+</body>
+
+</html>

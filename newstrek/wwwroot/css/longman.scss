@@ -1,0 +1,322 @@
+.ref-2 .blog-text {
+
+  span {
+    display: block;
+  }
+
+  .topics_container,
+  .HYPHENATION,
+  .PronCodes,
+  .LEVEL,
+  .FREQ,
+  .speaker,
+  script {
+    display: none;
+  }
+
+  .ldoceEntry:has(.newline) {
+    display: none;
+  }
+
+  .Head {
+    display: flex;
+    align-items: center;
+    border-bottom: 3px #178286 solid;
+
+    .HWD {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-right: .5rem;
+    }
+
+    .POS {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-left: .5rem;
+    }
+
+    .GRAM {
+      display: inline-flex;
+      margin-left: 1rem;
+    }
+  }
+
+  .Sense {
+    line-height: 2rem;
+    margin-top: .5rem;
+
+    .sensenum {
+      display: inline;
+    }
+
+    .SIGNPOST {
+      display: inline-flex;
+      align-items: center;
+      margin-left: .3rem;
+      font-style: italic;
+      font-weight: 600;
+      color: #178286;
+      background-color: #b2becd;
+      border-radius: 10px;
+      padding: 0 .3rem;
+    }
+
+    .REGISTERLAB {
+      display: inline-flex;
+      align-items: center;
+      margin-left: .3rem;
+      font-style: italic;
+      font-weight: 600;
+      color: #178286;
+      background-color: #b2becd;
+      border-radius: 10px;
+      padding: 0 .3rem;
+    }
+
+    .ACTIV {
+      display: none;
+    }
+
+    img {
+      max-width: 10rem;
+    }
+
+    .GRAM {
+      display: inline-flex;
+      margin-left: 1rem;
+    }
+
+    .Subsense {
+
+      .DEF {
+        display: inline;
+      }
+
+      .GEO {
+        display: none;
+      }
+    }
+
+    .FIELD {
+      display: none;
+    }
+
+    .DEF {
+      display: inline;
+      font-size: 1.3rem;
+
+      a,
+      span {
+        display: inline;
+      }
+
+      .SUFFIX {
+        margin-left: -.4rem;
+      }
+    }
+
+    .GramExa .PROPFORM {
+      font-size: 1.3rem;
+    }
+
+    .EXAMPLE {
+      display: inline-block;
+      padding: 0 .3rem;
+      margin: 0 .3rem;
+      color: #b2becd;
+      border-bottom: 1.5px #178286 solid;
+
+      .Play {
+        display: none;
+      }
+
+      .GLOSS {
+        display: inline;
+
+        span {
+          display: inline;
+        }
+      }
+    }
+
+    .Crossref {
+      display: inline-flex;
+
+      .crossRef {
+        display: flex;
+        align-items: center;
+        padding: 0 .3rem;
+      }
+    }
+
+    .Thesref {
+      display: none;
+    }
+  }
+
+  .Tail {
+    line-height: 2rem;
+
+    .RunOn {
+      display: flex;
+      align-items: center;
+
+      .DERIV {
+        font-size: 1.4rem;
+        font-weight: 500;
+      }
+
+      .POS {
+        font-size: 1.2rem;
+        font-weight: 400;
+      }
+
+      span {
+        margin-left: .2rem;
+        margin-right: .2rem;
+      }
+    }
+
+    .Crossref {
+
+      span {
+        display: inline;
+      }
+
+      .REFHWD {
+        margin-left: .3rem;
+      }
+
+      .crossRef {
+        display: inline-flex;
+      }
+
+      .REFHOMNUM,
+      .REFSENSENUM {
+        display: none;
+      }
+    }
+
+    .ColloBox {
+      border: #178286 1px solid;
+      border-radius: 5px;
+      padding: 1rem;
+      margin-top: 1rem;
+
+      .heading {
+        font-size: 1.4rem;
+        font-weight: 700;
+        padding: 0 .4rem;
+        display: inline;
+        border-bottom: 3px #178286 solid;
+      }
+
+      .HEADING {
+        display: none;
+      }
+
+      .Section {
+        margin-top: 1rem;
+
+        .SECHEADING {
+          display: inline;
+          padding: .3rem;
+          background-color: #178286;
+          border-radius: 5px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          margin-bottom: .5rem;
+        }
+      }
+
+      .Collocate {
+
+        .COLLOC {
+          display: inline-flex;
+          align-items: center;
+        }
+
+        .COLLGLOSS {
+
+          a,
+          span {
+            display: inline;
+          }
+        }
+
+        .EXAMPLE {
+          display: inline-flex;
+          align-items: center;
+          color: #b2becd;
+          border-bottom: 1.5px #178286 solid;
+          margin-left: .5rem;
+          padding: 0 .3rem;
+        }
+
+        .GEO {
+          display: inline-flex;
+          align-items: center;
+          margin: 0 .5rem;
+          font-weight: 300;
+          color: #178286;
+        }
+
+        .Variant {
+
+          a,
+          span {
+            display: inline;
+          }
+        }
+      }
+    }
+
+    .ThesBox {
+      line-height: 2rem;
+      border: #178286 1px solid;
+      border-radius: 5px;
+      padding: 1rem;
+      margin-top: 1rem;
+
+      .heading {
+        font-size: 1.4rem;
+        font-weight: 700;
+        padding: 0 .4rem;
+        display: inline;
+        border-bottom: 3px #178286 solid;
+      }
+
+      .Section {
+
+        .Exponent {
+          margin: .5rem auto;
+
+          span {
+            display: inline-flex;
+          }
+
+          .EXP {
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 0 .3rem;
+            margin-right: .5rem;
+            background-color: #178286;
+            border-radius: 5px;
+          }
+
+          .DEF {
+            display: block;
+          }
+
+          .EXAMPLE {
+            display: inline-flex;
+            color: #b2becd;
+            border-bottom: 1.5px #178286 solid;
+            margin-left: .5rem;
+            padding: 0 .3rem;
+          }
+        }
+      }
+    }
+  }
+}

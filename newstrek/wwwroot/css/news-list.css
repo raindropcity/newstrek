@@ -1,0 +1,14 @@
+#news #news-header-content {
+  display: block;
+}
+#news #news-header-content #news-header {
+  position: relative;
+  margin: 0 auto;
+}
+#news #news-header-content #news-header #news-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+}/*# sourceMappingURL=news-list.css.map */

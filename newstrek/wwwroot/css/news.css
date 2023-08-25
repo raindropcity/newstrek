@@ -1,0 +1,87 @@
+.lookup-option {
+  position: absolute;
+  background-color: #178286;
+  padding: 5px 10px;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#news #news-header-content {
+  display: block;
+}
+#news #news-header-content #news-header {
+  position: relative;
+  margin: 0 auto;
+}
+#news #news-header-content #news-header #news-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+}
+#news #news-header-content #news-header #news-content .def-modal {
+  position: absolute;
+  top: 0;
+  z-index: 5;
+  padding: 1.1rem;
+  width: 50%;
+  height: 100%;
+  border-radius: 10px;
+  background-color: var(--color-grey-5);
+}
+#news #news-header-content #news-header #news-content .def-modal h5 {
+  cursor: pointer;
+}
+#news #news-header-content #news-header #news-content .def-modal h4 {
+  font-size: 1.5rem;
+  margin-bottom: 0.7rem;
+  transition: all 0.4s ease-in-out;
+}
+#news #news-header-content #news-header #news-content .def-modal .left-arrow {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  margin-left: 0;
+}
+#news #news-header-content #news-header #news-content .def-modal .left-arrow i {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+#news #news-header-content #news-header #news-content .def-modal .right-arrow {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  margin-right: 0;
+}
+#news #news-header-content #news-header #news-content .def-modal .right-arrow i {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+#news #news-header-content #news-header #news-content .def-modal .vocabulary {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+#news #news-header-content #news-header #news-content .def-modal .vocabulary .blog {
+  width: 100%;
+  margin: 0;
+  border: 3px #178286 solid;
+}
+#news #news-header-content #news-header #news-content .def-modal .vocabulary .blog .blog-text {
+  height: 90%;
+  padding-top: 1rem;
+  padding-bottom: 0;
+  overflow: scroll;
+}
+#news #news-header-content #news-header #news-content .def-modal .vocabulary .blog .blog-text::-webkit-scrollbar {
+  width: 10px;
+}
+#news #news-header-content #news-header #news-content .def-modal .vocabulary .blog .blog-text::-webkit-scrollbar-thumb {
+  background-color: var(--color-grey-4);
+}
+#news #news-header-content #news-header #news-content .def-modal .vocabulary .blog .blog-text::-webkit-scrollbar-corner {
+  background-color: var(--color-grey-5);
+}/*# sourceMappingURL=news.css.map */
