@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -212,13 +213,15 @@ namespace newstrek.Controllers
 
         private string GenerateJwtToken(User user)
         {
-            DotNetEnv.Env.Load();
-            var JWT_Issuer_SigningKey = System.Environment.GetEnvironmentVariable("JWT_Issuer_SigningKey");
+            var JWT_Issuer_SigningKey = _configuration["Jwt:SecretKey"];
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT_Issuer_SigningKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {
+                new Claim(JwtRegisteredClaimNames.Sub, "TokenForTheApiWithAuth"),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture)),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim("provider", user.Provider),
@@ -272,4 +275,3 @@ namespace newstrek.Controllers
         }
     }
 }
-

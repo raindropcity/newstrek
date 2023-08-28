@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using crawler_test.Data;
+using newstrek.Data;
 
 #nullable disable
 
-namespace crawler_test.Migrations
+namespace newstrek.Migrations
 {
     [DbContext(typeof(NewsTrekDbContext))]
     [Migration("20230826152520_Initial")]
