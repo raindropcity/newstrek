@@ -85,20 +85,20 @@
 
         <!-- 右側fixed button -->
         <div class="controlls">
-            <a href="/newstrek/home.html" class="control control-1 active-btn" data-id="home">
+            <a href="/newstrek/home.html" class="control control-1 active-btn" data-id="home" title="Home">
                 <i class="fas fa-home"></i>
             </a>
-            <a href="/category.html" class="control control-4 active-btn" data-id="blogs">
+            <a href="/newstrek/category.html" class="control control-4 active-btn" data-id="blogs" title="News">
                 <i class="far fa-newspaper"></i>
             </a>
-            <a href="#" class="control control-3 active-btn" data-id="portfolio">
-                <i class="fas fa-briefcase"></i>
+            <a href="#" class="control control-3 active-btn" data-id="portfolio" title="Make a Sentence">
+                <i class="far fa-comment-dots"></i>
             </a>
-            <a href="#" class="control control-2 active-btn" data-id="about">
+            <a href="#" class="control control-2 active-btn" data-id="about" title="Your Profile">
                 <i class="fas fa-user"></i>
             </a>
-            <a href="#" class="control control-5 active-btn" data-id="contact">
-                <i class="fas fa-envelope-open"></i>
+            <a href="/newstrek/sign-in.html" class="control control-5 active-btn" data-id="contact" title="LogOut">
+                <i class="fas fa-sign-out-alt"></i>
             </a>
         </div>
     </div>
@@ -107,12 +107,20 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+            const logOutBtn = document.querySelector(".controlls a[title=\"LogOut\"]")
+
+            logOutBtn.addEventListener('click', () => {
+                if (window.localStorage.getItem("JWT_token")) {
+                    window.localStorage.removeItem("JWT_token")
+                }
+            })
+
             $("#world").click(function () {
                 const category = $("#world").attr("id")
 
                 window.location.assign(`/newstrek/news-list.html?category=${category}`)
 
-                console.log(category)   
+                console.log(category)
             })
 
             $("#business").click(function () {

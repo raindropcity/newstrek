@@ -3,6 +3,7 @@ using newstrek.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Nest;
+using Microsoft.AspNetCore.Authorization;
 
 namespace newstrek.Controllers
 {
@@ -18,6 +19,7 @@ namespace newstrek.Controllers
             _newsTrekDbContext = newsTrekDbContext;
         }
 
+        [Authorize]
         [HttpGet("SearchNews")] // 要分查詢權重
         public async Task<IActionResult> SearchNews(string keyword)
         {
@@ -32,6 +34,7 @@ namespace newstrek.Controllers
             return Ok(results.Documents.ToList());
         }
 
+        [Authorize]
         [HttpGet("search-news-by-category")]
         public async Task<IActionResult> SearchNewsBycategory(string category)
         {
@@ -51,6 +54,7 @@ namespace newstrek.Controllers
             return Ok(results.Documents.ToList());
         }
 
+        [Authorize]
         [HttpGet("search-news-by-num")]
         public async Task<IActionResult> SearchNewsByUrlNum(string num)
         {

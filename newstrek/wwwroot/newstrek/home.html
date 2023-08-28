@@ -89,56 +89,75 @@
 
     <!-- 右側fixed button -->
     <div class="controlls">
-        <a href="/newstrek/home.html" class="control control-1 active-btn" data-id="home">
+        <a href="/newstrek/home.html" class="control control-1 active-btn" data-id="home" title="Home">
             <i class="fas fa-home"></i>
         </a>
-        <a href="/newstrek/category.html" class="control control-4 active-btn" data-id="blogs">
+        <a href="/newstrek/category.html" class="control control-4 active-btn" data-id="blogs" title="News">
             <i class="far fa-newspaper"></i>
         </a>
-        <a href="#" class="control control-3 active-btn" data-id="portfolio">
-            <i class="fas fa-briefcase"></i>
+        <a href="#" class="control control-3 active-btn" data-id="portfolio" title="Make a Sentence">
+            <i class="far fa-comment-dots"></i>
         </a>
-        <a href="#" class="control control-2 active-btn" data-id="about">
+        <a href="#" class="control control-2 active-btn" data-id="about" title="Your Profile">
             <i class="fas fa-user"></i>
         </a>
-        <a href="#" class="control control-5 active-btn" data-id="contact">
-            <i class="fas fa-envelope-open"></i>
+        <a href="/newstrek/sign-in.html" class="control control-5 active-btn" data-id="contact" title="LogOut">
+            <i class="fas fa-sign-out-alt"></i>
         </a>
     </div>
 
     <!-- 引用JS -->
     <script src="../js/action.js"></script>
     <script type="text/javascript">
-        const submitBtn = document.querySelector("#search-word-btn")
+        document.addEventListener('DOMContentLoaded', () => {
+            const submitBtn = document.querySelector("#search-word-btn")
+            const logOutBtn = document.querySelector(".controlls a[title=\"LogOut\"]")
 
-        submitBtn.addEventListener('click', () => {
-            event.preventDefault();
+            logOutBtn.addEventListener('click', () => {
+                if (window.localStorage.getItem("JWT_token")) {
+                    window.localStorage.removeItem("JWT_token")
+                }
+            })
 
-            const vocabulary = document.querySelector("#search").value
-            const defCard_1 = document.querySelector(".ref-1 .blog-text")
-            const defCard_2 = document.querySelector(".ref-2 .blog-text")
+            submitBtn.addEventListener('click', () => {
+                event.preventDefault();
 
-            fetch(`/Dictionary/look-up-words-crawler-Merriam-Webster?word=${vocabulary}`)
-                .then(data => {
-                    data.text().then((content) => {
-                        console.log(content)
-                        defCard_1.innerHTML = content
+                const vocabulary = document.querySelector("#search").value
+                const defCard_1 = document.querySelector(".ref-1 .blog-text")
+                const defCard_2 = document.querySelector(".ref-2 .blog-text")
+
+                const token = localStorage.getItem('JWT_token')
+                const headers = {
+                    Authorization: `Bearer ${token}`
+                }
+
+                fetch(`/Dictionary/look-up-words-crawler-Merriam-Webster?word=${vocabulary}`, { headers })
+                    .then(response => {
+                        if (response.status === 401 || response.status === 403) {
+                            alert("Please sign in")
+                            window.location.assign("/newstrek/sign-in.html")
+                        }
+                        return response
                     })
-                })
-                .catch(error => {
-                    console.error('Error in GET request to crwal vocabulary in Merriam Webster', error);
-                })
-
-            fetch(`/Dictionary/look-up-words-crawler-Longman?word=${vocabulary}`)
-                .then(data => {
-                    data.text().then((content) => {
-                        console.log(content)
-                        defCard_2.innerHTML = content
+                    .then(data => {
+                        data.text().then((content) => {
+                            defCard_1.innerHTML = content
+                        })
                     })
-                })
-                .catch(error => {
-                    console.error('Error in GET request to crwal vocabulary in Longman', error);
-                })
+                    .catch(error => {
+                        console.error('Error in GET request to crwal vocabulary in Merriam Webster', error);
+                    })
+
+                fetch(`/Dictionary/look-up-words-crawler-Longman?word=${vocabulary}`, { headers })
+                    .then(data => {
+                        data.text().then((content) => {
+                            defCard_2.innerHTML = content
+                        })
+                    })
+                    .catch(error => {
+                        console.error('Error in GET request to crwal vocabulary in Longman', error);
+                    })
+            })
         })
     </script>
 </body>

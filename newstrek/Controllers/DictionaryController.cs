@@ -4,9 +4,12 @@ using System.Net.Http;
 using System.Text.Json;
 using AngleSharp;
 using AngleSharp.Dom;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 
 namespace newstrek.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class DictionaryController : ControllerBase
@@ -14,7 +17,7 @@ namespace newstrek.Controllers
         private readonly NewsTrekDbContext _newsTrekDbContext;
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public DictionaryController (NewsTrekDbContext newsTrekDbContext, IHttpClientFactory httpClientFactory)
+        public DictionaryController(NewsTrekDbContext newsTrekDbContext, IHttpClientFactory httpClientFactory)
         {
             _newsTrekDbContext = newsTrekDbContext;
             _httpClientFactory = httpClientFactory;
@@ -24,37 +27,67 @@ namespace newstrek.Controllers
         [HttpGet("look-up-words-crawler-Merriam-Webster")]
         public async Task<IActionResult> LookUpWordsCrawlerMerriamWebster(string word)
         {
-            var config = Configuration.Default.WithDefaultLoader();
-            var address = $"https://www.merriam-webster.com/dictionary/{word}";
-            var context = BrowsingContext.New(config);
-            var document = await context.OpenAsync(address);
-
-            var def = document.QuerySelectorAll(".entry-word-section-container");
-            string? htmlStructure = "";
-            foreach (var item in def)
+            try
             {
-                htmlStructure += item.OuterHtml;
-            }
+                var config = Configuration.Default.WithDefaultLoader();
+                var address = $"https://www.merriam-webster.com/dictionary/{word}";
+                var context = BrowsingContext.New(config);
+                var document = await context.OpenAsync(address);
 
-            return Ok(htmlStructure);
+                var def = document.QuerySelectorAll(".entry-word-section-container");
+                string? htmlStructure = "";
+                foreach (var item in def)
+                {
+                    htmlStructure += item.OuterHtml;
+                }
+
+                return Ok(htmlStructure);
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized, "The authentication token has expired.");
+            }
+            catch (SecurityTokenValidationException)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "The authentication token is invalid.");
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Internal Server Error: " + e.Message);
+            }
         }
 
         [HttpGet("look-up-words-crawler-Longman")]
         public async Task<IActionResult> LookUpWordsCrawlerLongman(string word)
         {
-            var config = Configuration.Default.WithDefaultLoader();
-            var address = $"https://www.ldoceonline.com/dictionary/{word}";
-            var context = BrowsingContext.New(config);
-            var document = await context.OpenAsync(address);
-
-            var def = document.QuerySelectorAll(".ldoceEntry");
-            string? htmlStructure = "";
-            foreach (var item in def)
+            try
             {
-                htmlStructure += item.OuterHtml;
-            }
+                var config = Configuration.Default.WithDefaultLoader();
+                var address = $"https://www.ldoceonline.com/dictionary/{word}";
+                var context = BrowsingContext.New(config);
+                var document = await context.OpenAsync(address);
 
-            return Ok(htmlStructure);
+                var def = document.QuerySelectorAll(".ldoceEntry");
+                string? htmlStructure = "";
+                foreach (var item in def)
+                {
+                    htmlStructure += item.OuterHtml;
+                }
+
+                return Ok(htmlStructure);
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized, "The authentication token has expired.");
+            }
+            catch (SecurityTokenValidationException)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "The authentication token is invalid.");
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Internal Server Error: " + e.Message);
+            }
         }
 
         /* 串接英文辭典API：棄用 */

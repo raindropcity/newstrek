@@ -30,20 +30,20 @@
 
     <!-- 右側fixed button -->
     <div class="controlls">
-        <a href="/newstrek/home.html" class="control control-1 active-btn" data-id="home">
+        <a href="/newstrek/home.html" class="control control-1 active-btn" data-id="home" title="Home">
             <i class="fas fa-home"></i>
         </a>
-        <a href="/newstrek/category.html" class="control control-4 active-btn" data-id="blogs">
+        <a href="/newstrek/category.html" class="control control-4 active-btn" data-id="blogs" title="News">
             <i class="far fa-newspaper"></i>
         </a>
-        <a href="#" class="control control-3 active-btn" data-id="portfolio">
-            <i class="fas fa-briefcase"></i>
+        <a href="#" class="control control-3 active-btn" data-id="portfolio" title="Make a Sentence">
+            <i class="far fa-comment-dots"></i>
         </a>
-        <a href="#" class="control control-2 active-btn" data-id="about">
+        <a href="#" class="control control-2 active-btn" data-id="about" title="Your Profile">
             <i class="fas fa-user"></i>
         </a>
-        <a href="#" class="control control-5 active-btn" data-id="contact">
-            <i class="fas fa-envelope-open"></i>
+        <a href="/newstrek/sign-in.html" class="control control-5 active-btn" data-id="contact" title="LogOut">
+            <i class="fas fa-sign-out-alt"></i>
         </a>
     </div>
 
@@ -52,6 +52,14 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+            const logOutBtn = document.querySelector(".controlls a[title=\"LogOut\"]")
+
+            logOutBtn.addEventListener('click', () => {
+                if (window.localStorage.getItem("JWT_token")) {
+                    window.localStorage.removeItem("JWT_token")
+                }
+            })
+
             // Get the query string
             const queryString = window.location.search;
             // Create a URLSearchParams object to handle the query string
@@ -62,17 +70,32 @@
 
             const container = document.querySelector(".blog-text")
 
-            if (category) {
-                $.ajax({
-                    url: `/ElasticSearch/search-news-by-category?category=${category}`,
-                    method: 'GET',
-                    success: function (response) {
-                        $.each(response, function (index, value) {
-                            const url = value.url;
-                            const pattern = /\/(\d+)\//; // Regular expression pattern to match the number within slashes
+            const token = localStorage.getItem('JWT_token')
+            const headers = {
+                Authorization: `Bearer ${token}`
+            };
 
+            if (category) {
+                fetch(`/ElasticSearch/search-news-by-category?category=${category}`, { headers })
+                    .then(response => {
+                        if (response.status === 401 || response.status === 403) {
+                            alert("Please sign in")
+                            window.location.assign("/newstrek/sign-in.html")
+                        }
+                        return response
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Request failed with status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        data.forEach((value, index) => {
+                            const url = value.url;
+                            const pattern = /\/(\d+)\//;
                             const match = url.match(pattern);
-                            let number = 0
+                            let number = 0;
 
                             if (match && match.length > 1) {
                                 number = match[1];
@@ -80,54 +103,50 @@
                             } else {
                                 console.log("Number not found in URL.");
                             }
-                            
+
                             container.innerHTML += `
-                                <div>
-                                    <span>${index + 1}</span>
-                                    <a href="/newstrek/news.html?num=${number}">${value.title}</a>
-                                </div>
-                            `
-                        })
-                        console.log(response)
-                    },
-                    error: function (error) {
-                        console.error('error in GET request to search news by category', error)
-                    }
-                })
+                        <div>
+                            <span>${index + 1}</span>
+                            <a href="/newstrek/news.html?num=${number}">${value.title}</a>
+                        </div>
+                    `;
+                        });
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error('error in GET request to search news by category', error);
+                    });
             }
 
             if (keyword) {
-                $.ajax({
-                    url: `/ElasticSearch/SearchNews?keyword=${keyword}`,
-                    method: 'GET',
-                    success: function (response) {
-                        console.log(response)
-                        $.each(response, function (index, value) {
-                            const url = value.url;
-                            const pattern = /\/(\d+)\//; // Regular expression pattern to match the number within slashes
-
-                            const match = url.match(pattern);
-                            let number = 0
-
-                            if (match && match.length > 1) {
-                                number = match[1];
-                                console.log("Extracted Number:", number);
-                            } else {
-                                console.log("Number not found in URL.");
-                            }
-
-                            container.innerHTML += (`
-                                <div>
-                                    <span>${index + 1}</span>
-                                    <a href="/newstrek/news.html?num=${number}">${value.title}</a>
-                                </div>
-                            `)
-                        })
-                    },
-                    error: function (error) {
-                        console.error('error in GET request to search news', error)
-                    }
-                })
+                fetch(`/ElasticSearch/SearchNews?keyword=${keyword}`, { headers })
+                    .then(response => {
+                        if (response.status === 401 || response.status === 403) {
+                            alert("Please sign in")
+                            window.location.assign("/newstrek/sign-in.html")
+                        }
+                        return response
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Request failed with status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        data.forEach((value, index) => {
+                            container.innerHTML += `
+                        <div>
+                            <span>${index + 1}</span>
+                            <a href="/newstrek/news.html?num=${number}">${value.title}</a>
+                        </div>
+                    `;
+                        });
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error('error in GET request to search news', error);
+                    });
             }
         })
     </script>

@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using newstrek.Data;
+using crawler_test.Data;
 
 #nullable disable
 
-namespace newstrek.Migrations
+namespace crawler_test.Migrations
 {
     [DbContext(typeof(NewsTrekDbContext))]
-    partial class NewsTrekDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230826152520_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace newstrek.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("newstrek.Models.InterestedTopic", b =>
+            modelBuilder.Entity("crawler_test.Models.InterestedTopic", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -71,7 +74,7 @@ namespace newstrek.Migrations
                     b.ToTable("InterestedTopics");
                 });
 
-            modelBuilder.Entity("newstrek.Models.News", b =>
+            modelBuilder.Entity("crawler_test.Models.News", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -103,7 +106,7 @@ namespace newstrek.Migrations
                     b.ToTable("News");
                 });
 
-            modelBuilder.Entity("newstrek.Models.User", b =>
+            modelBuilder.Entity("crawler_test.Models.User", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -139,18 +142,18 @@ namespace newstrek.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("newstrek.Models.InterestedTopic", b =>
+            modelBuilder.Entity("crawler_test.Models.InterestedTopic", b =>
                 {
-                    b.HasOne("newstrek.Models.User", "User")
+                    b.HasOne("crawler_test.Models.User", "User")
                         .WithOne("InterestedTopic")
-                        .HasForeignKey("newstrek.Models.InterestedTopic", "UserId")
+                        .HasForeignKey("crawler_test.Models.InterestedTopic", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("newstrek.Models.User", b =>
+            modelBuilder.Entity("crawler_test.Models.User", b =>
                 {
                     b.Navigation("InterestedTopic")
                         .IsRequired();

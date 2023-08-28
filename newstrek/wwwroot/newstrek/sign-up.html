@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>NewsTrek</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/sign-up.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital@1&display=swap" rel="stylesheet">
+</head>
+
+<body class="main-content">
+    <section class="section sec5 contact" id="contact">
+        <div class="contact-container">
+            <div class="main-title">
+                <h2>Sign <span>Up</span></h2>
+            </div>
+            <div class="sign-up-content">
+                <form class="sign-up-form">
+                    <div class="left-sign-up">
+                        <div class="input-control">
+                            <input type="text" required placeholder="USER NAME" name="name" id="name">
+                        </div>
+                        <div class="input-control">
+                            <input type="email" required placeholder="YOUR EMAIL" name="email" id="email">
+                        </div>
+                        <div class="input-control">
+                            <input type="password" required placeholder="PASSWORD" name="password" id="password">
+                        </div>
+                        <div class="input-control">
+                            <input type="password" required placeholder="CONFIRM PASSWORD" name="confirmPassword"
+                                id="confirmPassword">
+                        </div>
+                    </div>
+                    <div class="right-sign-up">
+                        <h3>Select your interested topic</h3>
+                        <div class="checkbox-area">
+                            <label><input type="checkbox" name="world"> World</label>
+                            <label><input type="checkbox" name="business"> Business</label>
+                            <label><input type="checkbox" name="politics"> Politics</label>
+                            <label><input type="checkbox" name="health"> Health</label>
+                            <label><input type="checkbox" name="climate"> Climate</label>
+                            <label><input type="checkbox" name="tech"> Tech</label>
+                            <label><input type="checkbox" name="entertainment"> Entertainment</label>
+                            <label><input type="checkbox" name="science"> Science</label>
+                            <label><input type="checkbox" name="history"> History</label>
+                            <label><input type="checkbox" name="sports"> Sports</label>
+                        </div>
+                        <div class="submit-btn-div">
+                            <button type="submit" class="sign-up-submit-btn">
+                                <span>Submit</span>
+                            </button>
+                            <button class="sign-in-btn">
+                                <span>Sign In</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- 引用JS -->
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            const submitBtn = document.querySelector(".sign-up-submit-btn")
+            const signInBtn = document.querySelector(".sign-in-btn")
+
+            signInBtn.addEventListener('click', (event) => {
+                event.preventDefault()
+                window.location.assign("/newstrek/sign-in.html")
+            })
+
+            submitBtn.addEventListener('click', (event) => {
+                event.preventDefault()
+
+                const userData = {
+                    Name: document.querySelector("#name").value,
+                    Email: document.querySelector("#email").value,
+                    Password: document.querySelector("#password").value,
+                    ConfirmPassword: document.querySelector("#confirmPassword").value,
+                    InterestedTopicDto: {
+                        world: document.querySelector(".checkbox-area input[name=\"world\"]").checked,
+                        business: document.querySelector(".checkbox-area input[name=\"business\"]").checked,
+                        politics: document.querySelector(".checkbox-area input[name=\"politics\"]").checked,
+                        health: document.querySelector(".checkbox-area input[name=\"health\"]").checked,
+                        climate: document.querySelector(".checkbox-area input[name=\"climate\"]").checked,
+                        tech: document.querySelector(".checkbox-area input[name=\"tech\"]").checked,
+                        entertainment: document.querySelector(".checkbox-area input[name=\"entertainment\"]").checked,
+                        science: document.querySelector(".checkbox-area input[name=\"science\"]").checked,
+                        history: document.querySelector(".checkbox-area input[name=\"history\"]").checked,
+                        sports: document.querySelector(".checkbox-area input[name=\"sports\"]").checked
+                    }
+                }
+
+                fetch("/api/User/signup", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(userData)
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(data => Promise.reject(data.error))
+                        }
+                        return response.json()
+                    })
+                    .then(data => {
+                        console.log(data)
+                        window.localStorage.setItem('JWT_token', data.accessToken)
+                        window.location.assign('/newstrek/home.html')
+                    })
+                    .catch(error => {
+                        alert(error === undefined ? "Email is not valid" : error)
+                    })
+
+            })
+        })
+    </script>
+</body>
+
+</html>

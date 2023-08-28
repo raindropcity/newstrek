@@ -1,4 +1,12 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
+    const logOutBtn = document.querySelector(".controlls a[title=\"LogOut\"]")
+
+    logOutBtn.addEventListener('click', () => {
+        if (window.localStorage.getItem("JWT_token")) {
+            window.localStorage.removeItem("JWT_token")
+        }
+    })
+
     // Get the query string
     const queryString = window.location.search;
     // Create a URLSearchParams object to handle the query string
@@ -8,8 +16,21 @@
 
     const container = document.querySelector(".blog")
     console.log(num)
+
+    const token = localStorage.getItem('JWT_token')
+    const headers = {
+        Authorization: `Bearer ${token}`
+    }
+
     if (num) {
-        fetch(`/ElasticSearch/search-news-by-num?num=${num}`)
+        fetch(`/ElasticSearch/search-news-by-num?num=${num}`, { headers })
+            .then(response => {
+                if (response.status === 401 || response.status === 403) {
+                    alert("Please sign in")
+                    window.location.assign("/newstrek/sign-in.html")
+                }
+                return response
+            })
             .then(response => response.json())
             .then(response => {
                 console.log(response)

@@ -1,0 +1,93 @@
+.sign-up-content .sign-up-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.sign-up-content .sign-up-form .left-sign-up {
+  text-align: center;
+}
+.sign-up-content .sign-up-form .left-sign-up .input-control input {
+  border-radius: 30px;
+  font-weight: inherit;
+  font-size: inherit;
+  padding: 1.2rem 1.1rem;
+  margin-top: 1rem;
+  outline: none;
+  border: none;
+  background-color: var(--color-grey-5);
+  width: 90%;
+  color: var(--color-white);
+}
+.sign-up-content .sign-up-form .right-sign-up {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.sign-up-content .sign-up-form .right-sign-up h3 {
+  padding-left: 0.5rem;
+  text-transform: uppercase;
+}
+.sign-up-content .sign-up-form .right-sign-up .checkbox-area {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 70%;
+  padding: 0.5rem;
+  font-weight: inherit;
+  font-size: 1.2rem;
+}
+.sign-up-content .sign-up-form .right-sign-up .checkbox-area label {
+  margin: 0.3rem;
+}
+.sign-up-content .sign-up-form .right-sign-up .checkbox-area label input[type=checkbox] {
+  width: 15px;
+  height: 15px;
+}
+.sign-up-content .sign-up-form .right-sign-up .submit-btn-div {
+  display: flex;
+  justify-content: start;
+  border-radius: 30px;
+  color: inherit;
+  font-weight: 500;
+  width: 100%;
+  height: 2.5rem;
+  margin-left: 0.5rem;
+  margin-top: 0.5rem;
+}
+.sign-up-content .sign-up-form .right-sign-up .submit-btn-div .sign-up-submit-btn {
+  width: 30%;
+  height: 100%;
+  background-color: var(--color-secondary);
+  border-radius: 30px;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.sign-up-content .sign-up-form .right-sign-up .submit-btn-div .sign-up-submit-btn span {
+  font-size: 1rem;
+  text-transform: uppercase;
+  color: var(--color-white);
+  pointer-events: none;
+}
+.sign-up-content .sign-up-form .right-sign-up .submit-btn-div .sign-up-submit-btn:hover {
+  cursor: pointer;
+}
+.sign-up-content .sign-up-form .right-sign-up .submit-btn-div .sign-in-btn {
+  width: 30%;
+  height: 100%;
+  background-color: var(--color-secondary);
+  border-radius: 30px;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 1rem;
+}
+.sign-up-content .sign-up-form .right-sign-up .submit-btn-div .sign-in-btn span {
+  font-size: 1rem;
+  text-transform: uppercase;
+  color: var(--color-white);
+  pointer-events: none;
+}
+.sign-up-content .sign-up-form .right-sign-up .submit-btn-div .sign-in-btn:hover {
+  cursor: pointer;
+}/*# sourceMappingURL=sign-up.css.map */
