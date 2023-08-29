@@ -17,7 +17,7 @@
     const container = document.querySelector(".blog")
     console.log(num)
 
-    const token = localStorage.getItem('JWT_token')
+    const token = window.localStorage.getItem('JWT_token')
     const headers = {
         Authorization: `Bearer ${token}`
     }
@@ -25,8 +25,12 @@
     if (num) {
         fetch(`/ElasticSearch/search-news-by-num?num=${num}`, { headers })
             .then(response => {
-                if (response.status === 401 || response.status === 403) {
-                    alert("Please sign in")
+                if (response.status === 401) {
+                    alert("Your sign in status has expired. Please sign in again.")
+                    window.location.assign("/newstrek/sign-in.html")
+                }
+                else if (response.status === 403) {
+                    alert("Your identity authentication token is not valid. Please contact the developer, thanks!")
                     window.location.assign("/newstrek/sign-in.html")
                 }
                 return response
@@ -114,8 +118,24 @@ function performLookup(vocabulary) {
         defModal.classList.remove('show-up')
         defModal.classList.add('hidden')
     })
+    // Set the "JWT_token" in localStorage into the request header
+    const token = window.localStorage.getItem('JWT_token')
+    const headers = {
+        Authorization: `Bearer ${token}`
+    }
 
-    fetch(`/Dictionary/look-up-words-crawler-Merriam-Webster?word=${vocabulary}`)
+    fetch(`/Dictionary/look-up-words-crawler-Merriam-Webster?word=${vocabulary}`, { headers })
+        .then(response => {
+            if (response.status === 401) {
+                alert("Your sign in status has expired. Please sign in again.")
+                window.location.assign("/newstrek/sign-in.html")
+            }
+            else if (response.status === 403) {
+                alert("Your identity authentication token is not valid. Please contact the developer, thanks!")
+                window.location.assign("/newstrek/sign-in.html")
+            }
+            return response
+        })
         .then(data => {
             data.text().then((content) => {
                 if (content) defCard_1.innerHTML = content
@@ -126,8 +146,8 @@ function performLookup(vocabulary) {
             console.error('Error in GET request to crwal vocabulary in Merriam Webster', error);
         })
 
-    fetch(`/Dictionary/look-up-words-crawler-Longman?word=${vocabulary}`)
-        .then(data => {
+    fetch(`/Dictionary/look-up-words-crawler-Longman?word=${vocabulary}`, { headers })
+        .then(data => { 
             data.text().then((content) => {
                 if (content) defCard_2.innerHTML = content
                 else if (!content) defCard_2.innerHTML = `\"${vocabulary}\" is not included in Longman Dictionary.`

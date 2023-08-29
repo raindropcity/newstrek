@@ -70,7 +70,7 @@
 
             const container = document.querySelector(".blog-text")
 
-            const token = localStorage.getItem('JWT_token')
+            const token = window.localStorage.getItem('JWT_token')
             const headers = {
                 Authorization: `Bearer ${token}`
             };
@@ -78,8 +78,12 @@
             if (category) {
                 fetch(`/ElasticSearch/search-news-by-category?category=${category}`, { headers })
                     .then(response => {
-                        if (response.status === 401 || response.status === 403) {
-                            alert("Please sign in")
+                        if (response.status === 401) {
+                            alert("Your sign in status has expired. Please sign in again.")
+                            window.location.assign("/newstrek/sign-in.html")
+                        }
+                        else if (response.status === 403) {
+                            alert("Your identity authentication token is not valid. Please contact the developer, thanks!")
                             window.location.assign("/newstrek/sign-in.html")
                         }
                         return response
@@ -105,12 +109,12 @@
                             }
 
                             container.innerHTML += `
-                        <div>
-                            <span>${index + 1}</span>
-                            <a href="/newstrek/news.html?num=${number}">${value.title}</a>
-                        </div>
-                    `;
-                        });
+                                <div>
+                                    <span>${index + 1}</span>
+                                    <a href="/newstrek/news.html?num=${number}">${value.title}</a>
+                                </div>
+                            `
+                        })
                         console.log(data);
                     })
                     .catch(error => {
@@ -121,8 +125,12 @@
             if (keyword) {
                 fetch(`/ElasticSearch/SearchNews?keyword=${keyword}`, { headers })
                     .then(response => {
-                        if (response.status === 401 || response.status === 403) {
-                            alert("Please sign in")
+                        if (response.status === 401) {
+                            alert("Your sign in status has expired. Please sign in again.")
+                            window.location.assign("/newstrek/sign-in.html")
+                        }
+                        else if (response.status === 403) {
+                            alert("Your identity authentication token is not valid. Please contact the developer, thanks!")
                             window.location.assign("/newstrek/sign-in.html")
                         }
                         return response
@@ -135,12 +143,24 @@
                     })
                     .then(data => {
                         data.forEach((value, index) => {
+                            const url = value.url;
+                            const pattern = /\/(\d+)\//;
+                            const match = url.match(pattern);
+                            let number = 0;
+
+                            if (match && match.length > 1) {
+                                number = match[1];
+                                console.log("Extracted Number:", number);
+                            } else {
+                                console.log("Number not found in URL.");
+                            }
+
                             container.innerHTML += `
-                        <div>
-                            <span>${index + 1}</span>
-                            <a href="/newstrek/news.html?num=${number}">${value.title}</a>
-                        </div>
-                    `;
+                                <div>
+                                    <span>${index + 1}</span>
+                                    <a href="/newstrek/news.html?num=${number}">${value.title}</a>
+                                </div>
+                            `;
                         });
                         console.log(data);
                     })
