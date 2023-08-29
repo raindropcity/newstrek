@@ -1,9 +1,12 @@
 ﻿using newstrek.Data;
 using newstrek.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Nest;
-using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
+using System.Text.Json;
 
 namespace newstrek.Controllers
 {
@@ -109,6 +112,82 @@ namespace newstrek.Controllers
             }
 
             return Ok("Add news successfully");
+        }
+
+        [Authorize]
+        [HttpGet("recommend-news")]
+        public async Task<IActionResult> RecommendNews()
+        {
+            string authorizationHeader = HttpContext.Request.Headers["Authorization"];
+            if (authorizationHeader != null && authorizationHeader.StartsWith("Bearer "))
+            {
+                // extracts the JWT token from the header by removing the first 7 characters ("Bearer ")
+                string jwtToken = authorizationHeader.Substring(7);
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtTokenObject = tokenHandler.ReadJwtToken(jwtToken);
+
+                // Extract the Email involved in JWT
+                var emailClaim = jwtTokenObject.Claims.Where(c => c.Type.Contains("emailaddress")).Select(s => s.Value).ToList();
+
+                if (emailClaim != null)
+                {
+                    // Use the extracted Email to query the specific user's InterestedTopic
+                    var userInterestedTopic = await _newsTrekDbContext.Users.Where(u => u.Email == emailClaim[0]).Select(s => s.InterestedTopic).ToListAsync();
+
+                    // Try to iterate the object(must use System.Reflection)
+                    Type objectType = typeof(InterestedTopic);
+                    PropertyInfo[] properties = objectType.GetProperties();
+                    List<string> selectedInterestedTopic = new List<string>();
+
+                    foreach (PropertyInfo property in properties)
+                    {
+                        string propertyName = property.Name;
+                        object propertyValue = property.GetValue(userInterestedTopic[0]);
+
+                        // Check if propertyValue is a boolean and true
+                        if (propertyValue is bool && (bool)propertyValue)
+                        {
+                            // If the value is true, add its key into the List selectedInterestedTopic
+                            selectedInterestedTopic.Add(propertyName);
+                        }
+                    }
+
+                    var recommendedNews = await QueryRecommendedNews(selectedInterestedTopic);
+
+                    return Ok(recommendedNews[0].Documents.ToList());
+                }
+
+                return BadRequest("Email claim is missing or invalid");
+            }
+
+            return BadRequest("Error in Authorization of request header");
+        }
+
+        private async Task<List<ISearchResponse<News>>> QueryRecommendedNews(List<string> selectedInterestedTopic)
+        {
+            List<ISearchResponse<News>> result = new List<ISearchResponse<News>>();
+
+            foreach (var item in selectedInterestedTopic)
+            {
+                var searchResponse = await _elasticClient.SearchAsync<News>(s => s
+                    .Query(q => q
+                        .MultiMatch(mm => mm
+                            .Fields(f => f
+                                .Field(fld => fld.Category, boost: 2)
+                                .Field(fld => fld.Article, boost: 1.5)
+                                .Field(fld => fld.Title)
+                            )
+                            .Query(item)
+                        )
+                    )
+                    .Size(10 / selectedInterestedTopic.Count)
+                );
+
+                result.Add(searchResponse);
+            }
+
+            return result;
         }
     }
 }

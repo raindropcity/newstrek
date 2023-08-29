@@ -78,12 +78,12 @@
                     <input id="search" type="search" placeholder="Look Up words..." autofocus required />
                     <button id="search-word-btn" type="submit">Go</button>
                 </form>
-                <p class="En-language">
-                    recommanded News<br>
-                    recommanded News<br>
-                    recommanded News<br>
-                    recommanded News<br>
-                </p>
+                <div class="right-header-footer">
+                    <h3>Recommended News for you</h3>
+                    <div class="recommend-news-area">
+
+                    </div>
+                </div>
             </div>
     </header>
 
@@ -126,15 +126,19 @@
                 const defCard_1 = document.querySelector(".ref-1 .blog-text")
                 const defCard_2 = document.querySelector(".ref-2 .blog-text")
 
-                const token = localStorage.getItem('JWT_token')
+                const token = window.localStorage.getItem('JWT_token')
                 const headers = {
                     Authorization: `Bearer ${token}`
                 }
 
                 fetch(`/Dictionary/look-up-words-crawler-Merriam-Webster?word=${vocabulary}`, { headers })
                     .then(response => {
-                        if (response.status === 401 || response.status === 403) {
-                            alert("Please sign in")
+                        if (response.status === 401) {
+                            alert("Your sign in status has expired. Please sign in again.")
+                            window.location.assign("/newstrek/sign-in.html")
+                        }
+                        else if (response.status === 403) {
+                            alert("Your identity authentication token is not valid. Please contact the developer, thanks!")
                             window.location.assign("/newstrek/sign-in.html")
                         }
                         return response
@@ -158,6 +162,56 @@
                         console.error('Error in GET request to crwal vocabulary in Longman', error);
                     })
             })
+
+            // Recommend News to the user
+            if (window.localStorage.getItem('JWT_token')) {
+                const token = window.localStorage.getItem('JWT_token')
+                const headers = {
+                    Authorization: `Bearer ${token}`
+                }
+
+                fetch(`/ElasticSearch/recommend-news`, { headers })
+                    .then(response => {
+                        if (response.status === 401) {
+                            alert("Your sign in status has expired. Please sign in again.")
+                            window.location.assign("/newstrek/sign-in.html")
+                        }
+                        else if (response.status === 403) {
+                            alert("Your identity authentication token is not valid. Please contact the developer, thanks!")
+                            window.location.assign("/newstrek/sign-in.html")
+                        }
+                        return response.json()
+                    })
+                    .then(data => {
+                        console.log(data)
+                        let recommendNewsArea = document.querySelector(".recommend-news-area")
+                        recommendNewsArea.innerHTML = ""
+
+                        data.forEach((value, index) => {
+                            const url = value.url;
+                            const pattern = /\/(\d+)\//;
+                            const match = url.match(pattern);
+                            let number = 0;
+
+                            if (match && match.length > 1) {
+                                number = match[1];
+                                console.log("Extracted Number:", number);
+                            } else {
+                                console.log("Number not found in URL.");
+                            }
+
+                            recommendNewsArea.innerHTML += `
+                                <div>
+                                    <span>${index + 1}</span>
+                                    <a href="/newstrek/news.html?num=${number}">${value.title}</a>
+                                </div>
+                            `;
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error in GET request to recommend news', error);
+                    })
+            }
         })
     </script>
 </body>
