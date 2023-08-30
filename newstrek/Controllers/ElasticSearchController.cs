@@ -167,6 +167,7 @@ namespace newstrek.Controllers
         private async Task<List<ISearchResponse<News>>> QueryRecommendedNews(List<string> selectedInterestedTopic)
         {
             List<ISearchResponse<News>> result = new List<ISearchResponse<News>>();
+            int qty = (int)Math.Ceiling(10.0 / selectedInterestedTopic.Count);
 
             foreach (var item in selectedInterestedTopic)
             {
@@ -181,7 +182,7 @@ namespace newstrek.Controllers
                             .Query(item)
                         )
                     )
-                    .Size(10 / selectedInterestedTopic.Count)
+                    .Size(qty)
                 );
 
                 result.Add(searchResponse);
