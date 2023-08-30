@@ -155,7 +155,7 @@ namespace newstrek.Controllers
 
                     var recommendedNews = await QueryRecommendedNews(selectedInterestedTopic);
 
-                    return Ok(recommendedNews[0].Documents.ToList());
+                    return Ok(recommendedNews);
                 }
 
                 return BadRequest("Email claim is missing or invalid");
@@ -164,10 +164,13 @@ namespace newstrek.Controllers
             return BadRequest("Error in Authorization of request header");
         }
 
-        private async Task<List<ISearchResponse<News>>> QueryRecommendedNews(List<string> selectedInterestedTopic)
+        private async Task<List<News>> QueryRecommendedNews(List<string> selectedInterestedTopic)
         {
             List<ISearchResponse<News>> result = new List<ISearchResponse<News>>();
-            int qty = (int)Math.Ceiling(10.0 / selectedInterestedTopic.Count);
+            foreach (var item in selectedInterestedTopic)
+            {
+                Console.WriteLine(item);
+            }
 
             foreach (var item in selectedInterestedTopic)
             {
@@ -182,13 +185,28 @@ namespace newstrek.Controllers
                             .Query(item)
                         )
                     )
-                    .Size(qty)
+                    .Size(100)
                 );
 
                 result.Add(searchResponse);
             }
+            List<News> allDocuments = result.SelectMany(response => response.Documents).ToList();
 
-            return result;
+            // Random 10 篇
+            Random random = new Random();
+            int numberOfRandomElements = 10;
+            List<News> randomNewsList = new List<News>();
+
+            while (randomNewsList.Count < numberOfRandomElements && allDocuments.Count > 0)
+            {
+                int randomIndex = random.Next(0, allDocuments.Count);
+                News randomNews = allDocuments[randomIndex];
+
+                randomNewsList.Add(randomNews);
+                allDocuments.RemoveAt(randomIndex); // Remove the selected news to avoid duplicates
+            }
+
+            return randomNewsList;
         }
     }
 }
