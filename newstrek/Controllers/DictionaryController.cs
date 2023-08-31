@@ -1,13 +1,12 @@
 ﻿using newstrek.Data;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
-using System.Text.Json;
 using AngleSharp;
 using AngleSharp.Dom;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using System.Text.Json;
 
-namespace newstrek.Controllers
+namespace crawler_test.Controllers
 {
     [Authorize]
     [ApiController]
@@ -17,7 +16,7 @@ namespace newstrek.Controllers
         private readonly NewsTrekDbContext _newsTrekDbContext;
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public DictionaryController(NewsTrekDbContext newsTrekDbContext, IHttpClientFactory httpClientFactory)
+        public DictionaryController (NewsTrekDbContext newsTrekDbContext, IHttpClientFactory httpClientFactory)
         {
             _newsTrekDbContext = newsTrekDbContext;
             _httpClientFactory = httpClientFactory;
@@ -92,42 +91,42 @@ namespace newstrek.Controllers
 
         /* 串接英文辭典API：棄用 */
         // Key for Collegiate® Dictionary with Audio / Collegiate® Thesaurus API
-        //string? DictionaryApiKey = Environment.GetEnvironmentVariable("DictionaryApiKey");
-        //string? ThesaurusApiKey = Environment.GetEnvironmentVariable("ThesaurusApiKey");
+        string? DictionaryApiKey = Environment.GetEnvironmentVariable("DictionaryApiKey");
+        string? ThesaurusApiKey = Environment.GetEnvironmentVariable("ThesaurusApiKey");
 
-        //string? wordnikApiKey = Environment.GetEnvironmentVariable("wordnikApiKey");
+        string? wordnikApiKey = Environment.GetEnvironmentVariable("wordnikApiKey");
 
-        //[HttpGet("look-up-words")]
-        //public async Task<IActionResult> LookUpWords(string word)
-        //{
-        //    string? DictionaryRequestUrl = $"https://api.wordnik.com/v4/word.json/{word}/definitions?limit=200&includeRelated=true&sourceDictionaries=webster&useCanonical=true&includeTags=false&api_key={wordnikApiKey}";
+        [HttpGet("look-up-words")]
+        public async Task<IActionResult> LookUpWords(string word)
+        {
+            string? DictionaryRequestUrl = $"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{word}?key={DictionaryApiKey}";
 
-        //    try
-        //    {
-        //        // Create an HttpClient instance using the factory
-        //        var httpClient = _httpClientFactory.CreateClient();
-        //        // Send the request to Webster Collegiate® Dictionary with Audio API
-        //        var response = await httpClient.GetAsync(DictionaryRequestUrl);
+            try
+            {
+                // Create an HttpClient instance using the factory
+                var httpClient = _httpClientFactory.CreateClient();
+                // Send the request to Webster Collegiate® Dictionary with Audio API
+                var response = await httpClient.GetAsync(DictionaryRequestUrl);
 
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            string responseBody = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
+                {
+                    string responseBody = await response.Content.ReadAsStringAsync();
 
-        //            dynamic x = JsonSerializer.Deserialize<dynamic>(responseBody);
+                    dynamic result = JsonSerializer.Deserialize<dynamic>(responseBody);
 
-        //            return Ok(x);
-        //        }
-        //        else
-        //        {
-        //            // Handle non-success status codes
-        //            return StatusCode((int)response.StatusCode);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Handle exceptions
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+                    return Ok(result);
+                }
+                else
+                {
+                    // Handle non-success status codes
+                    return StatusCode((int)response.StatusCode);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
