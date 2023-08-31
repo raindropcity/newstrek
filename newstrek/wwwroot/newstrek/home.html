@@ -79,9 +79,13 @@
                     <button id="search-word-btn" type="submit">Go</button>
                 </form>
                 <div class="right-header-footer">
-                    <h3>Recommended News for you</h3>
-                    <div class="recommend-news-area">
+                    <div class="vocabulary">
+                        <div class="blog">
+                            <h3>Recommended News for you</h3>
+                            <div class="blog-text recommend-news-area">
 
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -95,7 +99,7 @@
         <a href="/newstrek/category.html" class="control control-4 active-btn" data-id="blogs" title="News">
             <i class="far fa-newspaper"></i>
         </a>
-        <a href="#" class="control control-3 active-btn" data-id="portfolio" title="Make a Sentence">
+        <a href="/newstrek/sentence.html" class="control control-3 active-btn" data-id="portfolio" title="Make a Sentence">
             <i class="far fa-comment-dots"></i>
         </a>
         <a href="#" class="control control-2 active-btn" data-id="about" title="Your Profile">
@@ -145,7 +149,8 @@
                     })
                     .then(data => {
                         data.text().then((content) => {
-                            defCard_1.innerHTML = content
+                            if (content) defCard_1.innerHTML = content
+                            else if (!content) defCard_1.innerHTML = `\"${vocabulary}\" is not included in Merriam Webster Dictionary.`
                         })
                     })
                     .catch(error => {
@@ -201,7 +206,7 @@
                             }
 
                             recommendNewsArea.innerHTML += `
-                                <div>
+                                <div class="recommended-news">
                                     <span>${index + 1}</span>
                                     <a href="/newstrek/news.html?num=${number}">${value.title}</a>
                                 </div>

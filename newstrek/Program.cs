@@ -1,18 +1,24 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using newstrek.Data;
 using newstrek.Extensions;
+using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using newstrek.Configurations;
+using newstrek.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+DotNetEnv.Env.Load();
+var OpenAiKey = System.Environment.GetEnvironmentVariable("OpenAI_ApiKey");
+builder.Services.Configure<OpenAiConfig>(options => options.Key = OpenAiKey);
 
 builder.Services.AddControllers();
 
-DotNetEnv.Env.Load();
 var DbConnectionString = System.Environment.GetEnvironmentVariable("NewsTrekDbConnectionString");
 builder.Services.AddDbContext<NewsTrekDbContext>(options => options.UseSqlServer(DbConnectionString));
+
+builder.Services.AddScoped<IOpenAiService, OpenAiService>();
 
 builder.Services.AddElasticSearch(builder.Configuration);
 
