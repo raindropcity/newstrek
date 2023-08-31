@@ -79,9 +79,13 @@
                     <button id="search-word-btn" type="submit">Go</button>
                 </form>
                 <div class="right-header-footer">
-                    <h3>Recommended News for you</h3>
-                    <div class="recommend-news-area">
+                    <div class="vocabulary">
+                        <div class="blog">
+                            <h3>Recommended News for you</h3>
+                            <div class="blog-text recommend-news-area">
 
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -145,7 +149,8 @@
                     })
                     .then(data => {
                         data.text().then((content) => {
-                            defCard_1.innerHTML = content
+                            if (content) defCard_1.innerHTML = content
+                            else if (!content) defCard_1.innerHTML = `\"${vocabulary}\" is not included in Merriam Webster Dictionary.`
                         })
                     })
                     .catch(error => {
@@ -201,7 +206,7 @@
                             }
 
                             recommendNewsArea.innerHTML += `
-                                <div>
+                                <div class="recommended-news">
                                     <span>${index + 1}</span>
                                     <a href="/newstrek/news.html?num=${number}">${value.title}</a>
                                 </div>
