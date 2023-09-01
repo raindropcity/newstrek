@@ -57,6 +57,25 @@
         </div>
     </section>
 
+    <!-- 右側fixed button -->
+    <div class="controlls">
+        <a href="/newstrek/home.html" class="control control-1 active-btn" data-id="home" title="Home">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="/newstrek/category.html" class="control control-4 active-btn" data-id="blogs" title="News">
+            <i class="far fa-newspaper"></i>
+        </a>
+        <a href="/newstrek/sentence.html" class="control control-3 active-btn" data-id="portfolio" title="Make a Sentence">
+            <i class="far fa-comment-dots"></i>
+        </a>
+        <a href="#" class="control control-2 active-btn" data-id="about" title="Your Profile">
+            <i class="fas fa-user"></i>
+        </a>
+        <a href="/newstrek/sign-in.html" class="control control-5 active-btn" data-id="contact" title="LogOut">
+            <i class="fas fa-sign-out-alt"></i>
+        </a>
+    </div>
+
     <!-- 引用JS -->
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', () => {
@@ -90,7 +109,7 @@
 
                 async function makeSentence() {
                     const fetchPromises = []
-                    
+
                     for (const word of userInputedWords) {
                         if (word.value) {
                             const fetchPromise = fetch(`/Dictionary/look-up-words?word=${word.value}`, { headers: { Authorization: `Bearer ${token}` } })
@@ -123,7 +142,7 @@
                             fetchPromises.push(word.value)
                         }
                     }
-                    
+
                     const results = await Promise.all(fetchPromises)
                     console.log(results)
                     let nextStepOrNot = true
@@ -143,7 +162,7 @@
 
                     if (nextStepOrNot) {
                         console.log("ready to fire request to OpenAI")
-                        
+
                         fetch("/api/OpenAi/CompleteSentence", {
                             method: "POST",
                             headers: {
@@ -167,8 +186,8 @@
                                 console.log(data)
                                 const sentence = document.querySelector(".sentence")
                                 sentence.innerHTML = `
-                                    <p>${data.result}</p>
-                                `
+                                        <p>${data.result}</p>
+                                    `
                             })
                             .catch(error => {
                                 console.log(error)
