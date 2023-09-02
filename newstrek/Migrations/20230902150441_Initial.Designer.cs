@@ -12,7 +12,7 @@ using newstrek.Data;
 namespace newstrek.Migrations
 {
     [DbContext(typeof(NewsTrekDbContext))]
-    [Migration("20230826152520_Initial")]
+    [Migration("20230902150441_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace newstrek.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("crawler_test.Models.InterestedTopic", b =>
+            modelBuilder.Entity("newstrek.Models.InterestedTopic", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -74,7 +74,7 @@ namespace newstrek.Migrations
                     b.ToTable("InterestedTopics");
                 });
 
-            modelBuilder.Entity("crawler_test.Models.News", b =>
+            modelBuilder.Entity("newstrek.Models.News", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -106,7 +106,7 @@ namespace newstrek.Migrations
                     b.ToTable("News");
                 });
 
-            modelBuilder.Entity("crawler_test.Models.User", b =>
+            modelBuilder.Entity("newstrek.Models.User", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -142,21 +142,53 @@ namespace newstrek.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("crawler_test.Models.InterestedTopic", b =>
+            modelBuilder.Entity("newstrek.Models.Vocabulary", b =>
                 {
-                    b.HasOne("crawler_test.Models.User", "User")
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Word")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Vocabularies");
+                });
+
+            modelBuilder.Entity("newstrek.Models.InterestedTopic", b =>
+                {
+                    b.HasOne("newstrek.Models.User", "User")
                         .WithOne("InterestedTopic")
-                        .HasForeignKey("crawler_test.Models.InterestedTopic", "UserId")
+                        .HasForeignKey("newstrek.Models.InterestedTopic", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("crawler_test.Models.User", b =>
+            modelBuilder.Entity("newstrek.Models.Vocabulary", b =>
+                {
+                    b.HasOne("newstrek.Models.User", null)
+                        .WithMany("Vacabularies")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("newstrek.Models.User", b =>
                 {
                     b.Navigation("InterestedTopic")
                         .IsRequired();
+
+                    b.Navigation("Vacabularies");
                 });
 #pragma warning restore 612, 618
         }
