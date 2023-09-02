@@ -77,11 +77,36 @@ namespace newstrek.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Vocabularies",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Word = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Vocabularies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Vocabularies_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_InterestedTopics_UserId",
                 table: "InterestedTopics",
                 column: "UserId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vocabularies_UserId",
+                table: "Vocabularies",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -92,6 +117,9 @@ namespace newstrek.Migrations
 
             migrationBuilder.DropTable(
                 name: "News");
+
+            migrationBuilder.DropTable(
+                name: "Vocabularies");
 
             migrationBuilder.DropTable(
                 name: "Users");
