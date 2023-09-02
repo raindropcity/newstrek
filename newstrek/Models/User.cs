@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using newstrek.Models;
+using System.Text.Json.Serialization;
 
 namespace newstrek.Models
 {
@@ -11,6 +12,7 @@ namespace newstrek.Models
         public string Name { get; set; }
         [JsonIgnore]
         public InterestedTopic InterestedTopic { get; set; }
+        public List<Vocabulary>? Vacabularies { get; set; }
         public string? AccessToken { get; set; }
         public long AccessExpired { get; set; }
         public DateTime? LoginAt { get; set; }
