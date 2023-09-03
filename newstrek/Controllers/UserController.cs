@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Reflection;
 
 namespace newstrek.Controllers
 {
@@ -193,19 +194,44 @@ namespace newstrek.Controllers
             {
                 var userIdentity = HttpContext.User.Identity as ClaimsIdentity;
                 var email = userIdentity.FindFirst(ClaimTypes.Email)?.Value;
+                var userId = userIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var name = userIdentity.FindFirst("name")?.Value;
 
-                //var userProfile = new UserSignUpModel
-                //{
-                //    Name = name,
-                //    Email = email,
-                //};
+                var savedVocabulary = await _newsTrekDbContext.Users
+                                        .Where(u => u.Email == email)
+                                        .SelectMany(u => u.Vacabularies) // Flatten the nested collection
+                                        .Select(v => v.Word) // Select the "Word" field
+                                        .ToListAsync();
 
-                return Ok(userIdentity);
+                var userInterestedTopic = await _newsTrekDbContext.Users.Where(u => u.Email == email).Select(s => s.InterestedTopic).ToListAsync();
+
+                // Try to iterate the object(must use System.Reflection)
+                Type objectType = typeof(InterestedTopic);
+                PropertyInfo[] properties = objectType.GetProperties();
+                List<string> selectedInterestedTopic = new List<string>();
+
+                foreach (PropertyInfo property in properties)
+                {
+                    string propertyName = property.Name;
+                    object propertyValue = property.GetValue(userInterestedTopic[0]);
+
+                    // Check if propertyValue is a boolean and true
+                    if (propertyValue is bool && (bool)propertyValue)
+                    {
+                        // If the value is true, add its key into the List selectedInterestedTopic
+                        selectedInterestedTopic.Add(propertyName);
+                    }
+                }
+
+                return Ok(new { 
+                    Name = name, 
+                    UserInterestedTopic = selectedInterestedTopic,
+                    UserSavedVocabulary = savedVocabulary
+                });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 

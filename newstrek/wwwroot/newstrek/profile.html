@@ -22,13 +22,15 @@
                 <div class="vocabulary" id="profile-content">
                     <div class="blog" id="profile">
                         <div class="blog-text">
-                            <h4><span>Username : </span> </h4>
+                            <h4 id="username"><span>Username : </span> </h4>
                             <h4>Your interested topic :</h4>
-                            <div class="interested-topic-area">
-                                <h5>World</h5>
-                            </div>
-                            <div class="interested-topic-area">
-                                <h5>Sports</h5>
+                            <div id="interested-topic-area">
+                                <!--<div class="interested-topic">
+                                    <h5>World</h5>
+                                </div>
+                                <div class="interested-topic">
+                                    <h5>Sports</h5>
+                                </div>-->
                             </div>
                         </div> 
                     </div>
@@ -72,25 +74,20 @@
                     Your<span>  Vocabulary</span>
                 </h1>
                 <!-- search bar -->
-                <form id="search-bar" onsubmit="event.preventDefault();" role="search">
-                    <label for="search">Search for stuff</label>
-                    <input id="search" type="search" placeholder="Search your vocabulary" autofocus required />
+                <!--<form id="search-bar" onsubmit="event.preventDefault();" role="search">
+                    <label for="search-saved-word">Search for stuff</label>
+                    <input id="search-saved-word" type="search" placeholder="Search your vocabulary" autofocus required />
                     <button id="search-saved-word-btn" type="submit">Go</button>
-                </form>
+                </form>-->
                 <div class="right-header-footer">
                     <div class="vocabulary">
                         <div class="blog">
-                            <div class="blog-text saved-vocabulary-area">
-                                <div class="saved-vocabulary">
-                                    <span>1</span>
+                            <div class="blog-text" id="saved-vocabulary-area">
+                                <!--<div class="saved-vocabulary">
+                                    <a href="#apple">1</a>
                                     <span class="per-saved-vocabulary">apple</span>
                                     <button>Look Up</button>
-                                </div>
-                                <div class="saved-vocabulary">
-                                    <span>2</span>
-                                    <span class="per-saved-vocabulary">orange</span>
-                                    <button>Look Up</button>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
                     </div>
@@ -120,6 +117,11 @@
     <!-- 引用JS -->
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', () => {
+            const username = document.querySelector("#username")
+            const interestedTopicArea = document.querySelector("#interested-topic-area")
+            const savedVocabularyArea = document.querySelector("#saved-vocabulary-area")
+            const searchBtn = document.querySelector("#search-saved-word-btn")
+
             const token = window.localStorage.getItem('JWT_token')
             const headers = {
                 Authorization: `Bearer ${token}`
@@ -135,10 +137,40 @@
                         alert("Your identity authentication token is not valid. Please contact the developer, thanks!")
                         window.location.assign("/newstrek/sign-in.html")
                     }
-                    return response
+                    return response.json()
                 })
                 .then(data => {
                     console.log(data)
+                    // Username
+                    var textNode = document.createTextNode(data.name);
+                    username.appendChild(textNode)
+                    // Interested Topic
+                    let interestedTopic = ""
+                    data.userInterestedTopic.forEach(item => {
+                        interestedTopic += `
+                            <div class="interested-topic">
+                                <h5>${item}</h5>
+                            </div>
+                        `
+                    })
+
+                    if (interestedTopic) interestedTopicArea.innerHTML = interestedTopic
+                    else interestedTopicArea.textContent = "You did not select your interested topic"
+
+                    // Saved Vocabulary
+                    let savedVocabulary = ""
+                    for (let i = 0; i < data.userSavedVocabulary.length; i++) {
+                        savedVocabulary += `
+                            <div class="saved-vocabulary">
+                                    <a href="#${data.userSavedVocabulary[i]}">${i + 1}</a>
+                                    <span class="per-saved-vocabulary">${data.userSavedVocabulary[i]}</span>
+                                    <button>Look Up</button>
+                            </div>
+                        `
+                    }
+
+                    if (savedVocabulary) savedVocabularyArea.innerHTML = savedVocabulary
+                    else savedVocabularyArea.textContent = "You have not saved any vocabulary"
                 })
                 .catch(error => {
                     console.error('Error in GET request to get user profile', error);
