@@ -187,23 +187,21 @@ namespace newstrek.Controllers
 
         [HttpGet("profile")]
         [Authorize]
-        public async Task<ActionResult<UserSignUpModel>> GetProfile()
+        public async Task<ActionResult/*<UserSignUpModel>*/> GetProfile()
         {
             try
             {
                 var userIdentity = HttpContext.User.Identity as ClaimsIdentity;
                 var email = userIdentity.FindFirst(ClaimTypes.Email)?.Value;
                 var name = userIdentity.FindFirst("name")?.Value;
-                //var picture = userIdentity.FindFirst("picture")?.Value;
-                //var provider = userIdentity.FindFirst("provider")?.Value;
 
-                var userProfile = new UserSignUpModel
-                {
-                    Name = name,
-                    Email = email,
-                };
+                //var userProfile = new UserSignUpModel
+                //{
+                //    Name = name,
+                //    Email = email,
+                //};
 
-                return Ok(userProfile);
+                return Ok(userIdentity);
             }
             catch (Exception ex)
             {

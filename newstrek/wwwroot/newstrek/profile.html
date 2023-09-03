@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>NewsTrek</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/webster.css">
+    <link rel="stylesheet" href="../css/longman.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital@1&display=swap" rel="stylesheet">
+</head>
+
+<body class="main-content">
+    <header class="section sec1 header active" id="home">
+        <div class="header-content">
+            <div class="left-header">
+                <div class="vocabulary" id="profile-content">
+                    <div class="blog" id="profile">
+                        <div class="blog-text">
+                            <h4><span>Username : </span> </h4>
+                            <h4>Your interested topic :</h4>
+                            <div class="interested-topic-area">
+                                <h5>World</h5>
+                            </div>
+                            <div class="interested-topic-area">
+                                <h5>Sports</h5>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="def-modal hidden">
+                        <h5>X</h5>
+                        <div class="left-arrow">
+                            <i class="fas fa-angle-left"></i>
+                        </div>
+                        <div class="vocabulary ref-1 show-up">
+                            <div class="blog">
+                                <h3>Merriam Webster Dictionary</h3>
+                                <div class="blog-text">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vocabulary ref-2 hidden">
+                            <div class="blog">
+                                <h3>Longman Dictionary of Contemporary English</h3>
+                                <div class="blog-text">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vocabulary ref-3 hidden">
+                            <div class="blog">
+                                <h3>資料來源</h3>
+                                <div class="blog-text">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right-arrow">
+                            <i class="fas fa-angle-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right-header">
+                <h1 class="name">
+                    Your<span>  Vocabulary</span>
+                </h1>
+                <!-- search bar -->
+                <form id="search-bar" onsubmit="event.preventDefault();" role="search">
+                    <label for="search">Search for stuff</label>
+                    <input id="search" type="search" placeholder="Search your vocabulary" autofocus required />
+                    <button id="search-saved-word-btn" type="submit">Go</button>
+                </form>
+                <div class="right-header-footer">
+                    <div class="vocabulary">
+                        <div class="blog">
+                            <div class="blog-text saved-vocabulary-area">
+                                <div class="saved-vocabulary">
+                                    <span>1</span>
+                                    <span class="per-saved-vocabulary">apple</span>
+                                    <button>Look Up</button>
+                                </div>
+                                <div class="saved-vocabulary">
+                                    <span>2</span>
+                                    <span class="per-saved-vocabulary">orange</span>
+                                    <button>Look Up</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </header>
+
+    <!-- 右側fixed button -->
+    <div class="controlls">
+        <a href="/newstrek/home.html" class="control control-1 active-btn" data-id="home" title="Home">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="/newstrek/category.html" class="control control-4 active-btn" data-id="blogs" title="News">
+            <i class="far fa-newspaper"></i>
+        </a>
+        <a href="/newstrek/sentence.html" class="control control-3 active-btn" data-id="portfolio" title="Make a Sentence">
+            <i class="far fa-comment-dots"></i>
+        </a>
+        <a href="/newstrek/profile.html" class="control control-2 active-btn" data-id="about" title="Your Profile">
+            <i class="fas fa-user"></i>
+        </a>
+        <a href="/newstrek/sign-in.html" class="control control-5 active-btn" data-id="contact" title="LogOut">
+            <i class="fas fa-sign-out-alt"></i>
+        </a>
+    </div>
+
+    <!-- 引用JS -->
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = window.localStorage.getItem('JWT_token')
+            const headers = {
+                Authorization: `Bearer ${token}`
+            }
+
+            fetch(`/api/User/profile`, { headers })
+                .then(response => {
+                    if (response.status === 401) {
+                        alert("Your sign in status has expired. Please sign in again.")
+                        window.location.assign("/newstrek/sign-in.html")
+                    }
+                    else if (response.status === 403) {
+                        alert("Your identity authentication token is not valid. Please contact the developer, thanks!")
+                        window.location.assign("/newstrek/sign-in.html")
+                    }
+                    return response
+                })
+                .then(data => {
+                    console.log(data)
+                })
+                .catch(error => {
+                    console.error('Error in GET request to get user profile', error);
+                })
+        })
+    </script>
+</body>
+
+</html>
