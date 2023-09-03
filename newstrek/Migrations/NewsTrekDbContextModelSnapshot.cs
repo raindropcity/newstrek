@@ -139,6 +139,27 @@ namespace newstrek.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("newstrek.Models.Vocabulary", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Word")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Vocabularies");
+                });
+
             modelBuilder.Entity("newstrek.Models.InterestedTopic", b =>
                 {
                     b.HasOne("newstrek.Models.User", "User")
@@ -150,10 +171,21 @@ namespace newstrek.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("newstrek.Models.Vocabulary", b =>
+                {
+                    b.HasOne("newstrek.Models.User", null)
+                        .WithMany("Vacabularies")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("newstrek.Models.User", b =>
                 {
                     b.Navigation("InterestedTopic")
                         .IsRequired();
+
+                    b.Navigation("Vacabularies");
                 });
 #pragma warning restore 612, 618
         }

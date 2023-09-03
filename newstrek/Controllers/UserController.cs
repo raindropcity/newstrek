@@ -187,23 +187,21 @@ namespace newstrek.Controllers
 
         [HttpGet("profile")]
         [Authorize]
-        public async Task<ActionResult<UserSignUpModel>> GetProfile()
+        public async Task<ActionResult/*<UserSignUpModel>*/> GetProfile()
         {
             try
             {
                 var userIdentity = HttpContext.User.Identity as ClaimsIdentity;
                 var email = userIdentity.FindFirst(ClaimTypes.Email)?.Value;
                 var name = userIdentity.FindFirst("name")?.Value;
-                //var picture = userIdentity.FindFirst("picture")?.Value;
-                //var provider = userIdentity.FindFirst("provider")?.Value;
 
-                var userProfile = new UserSignUpModel
-                {
-                    Name = name,
-                    Email = email,
-                };
+                //var userProfile = new UserSignUpModel
+                //{
+                //    Name = name,
+                //    Email = email,
+                //};
 
-                return Ok(userProfile);
+                return Ok(userIdentity);
             }
             catch (Exception ex)
             {
@@ -217,11 +215,14 @@ namespace newstrek.Controllers
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT_Issuer_SigningKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+            // Calculate the Unix Epoch time (seconds since January 1, 1970, UTC)
+            var issuedAtUtc = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, "TokenForTheApiWithAuth"),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture)),
+                new Claim(JwtRegisteredClaimNames.Iat, issuedAtUtc.ToString(), ClaimValueTypes.Integer64),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim("provider", user.Provider),

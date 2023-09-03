@@ -13,5 +13,6 @@ namespace newstrek.Data
         public DbSet<News> News { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<InterestedTopic> InterestedTopics { get; set; }
+        public DbSet<Vocabulary> Vocabularies { get; set; }
     }
 }

@@ -113,8 +113,9 @@
                     })
                     .then(data => {
                         console.log(data)
-                        window.localStorage.setItem('JWT_token', data.accessToken)
-                        window.location.assign('/newstrek/home.html')
+                        //window.localStorage.setItem('JWT_token', data.accessToken)
+                        alert("Sign up successfully, Please Sign in to start your trek!")
+                        window.location.assign('/newstrek/sign-in.html')
                     })
                     .catch(error => {
                         alert(error === undefined ? "Email is not valid" : error)
