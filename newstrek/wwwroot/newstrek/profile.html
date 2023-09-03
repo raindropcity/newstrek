@@ -19,71 +19,78 @@
     <header class="section sec1 header active" id="home">
         <div class="header-content">
             <div class="left-header">
-                <div class="h-shape"></div>
-                <div class="left-arrow">
-                    <i class="fas fa-angle-left"></i>
-                </div>
-                <div class="vocabulary ref-1 show-up">
-                    <div class="blog">
-                        <h3>Merriam Webster Dictionary</h3>
+                <div class="vocabulary" id="profile-content">
+                    <div class="blog" id="profile">
                         <div class="blog-text">
+                            <h4><span>Username : </span> </h4>
+                            <h4>Your interested topic :</h4>
+                            <div class="interested-topic-area">
+                                <h5>World</h5>
+                            </div>
+                            <div class="interested-topic-area">
+                                <h5>Sports</h5>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="def-modal hidden">
+                        <h5>X</h5>
+                        <div class="left-arrow">
+                            <i class="fas fa-angle-left"></i>
+                        </div>
+                        <div class="vocabulary ref-1 show-up">
+                            <div class="blog">
+                                <h3>Merriam Webster Dictionary</h3>
+                                <div class="blog-text">
 
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="vocabulary ref-2 hidden">
-                    <div class="blog">
-                        <h3>Longman Dictionary of Contemporary English</h3>
-                        <div class="blog-text">
+                        <div class="vocabulary ref-2 hidden">
+                            <div class="blog">
+                                <h3>Longman Dictionary of Contemporary English</h3>
+                                <div class="blog-text">
 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vocabulary ref-3 hidden">
+                            <div class="blog">
+                                <h3>資料來源</h3>
+                                <div class="blog-text">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right-arrow">
+                            <i class="fas fa-angle-right"></i>
                         </div>
                     </div>
-                </div>
-                <div class="vocabulary ref-3 hidden">
-                    <div class="blog">
-                        <h3>資料來源</h3>
-                        <div class="blog-text">
-                            <h4><span>red</span> :</h4>
-                            <p class="En-language">
-                                Software engineers explore the world without paper and pens. In the situation that
-                                needs
-                                to introduce the
-                                self-experience, it absolutely has to be in a cool way. Then I got rid of the
-                                paperwork
-                                and tried to build
-                                a website
-                                displaying myself. This project takes the advantage of MacLinz's online course
-                                . I learned many frontend skills built by SCSS, HTML, CSS & JS and didn't take
-                                the help of Bootstrap intentionally while constructing my own site. Of course, I
-                                tried
-                                to change some
-                                codes to make this
-                                site connect to the database MongoDB and run properly in Node.js
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="right-arrow">
-                    <i class="fas fa-angle-right"></i>
                 </div>
             </div>
             <div class="right-header">
                 <h1 class="name">
-                    Welcome to <span>NewsTrek</span><br>
-                    Let's learn English!
+                    Your<span>  Vocabulary</span>
                 </h1>
                 <!-- search bar -->
                 <form id="search-bar" onsubmit="event.preventDefault();" role="search">
                     <label for="search">Search for stuff</label>
-                    <input id="search" type="search" placeholder="Look Up words..." autofocus required />
-                    <button id="search-word-btn" type="submit">Go</button>
+                    <input id="search" type="search" placeholder="Search your vocabulary" autofocus required />
+                    <button id="search-saved-word-btn" type="submit">Go</button>
                 </form>
                 <div class="right-header-footer">
                     <div class="vocabulary">
                         <div class="blog">
-                            <h3>Recommended News for you</h3>
-                            <div class="blog-text recommend-news-area">
-
+                            <div class="blog-text saved-vocabulary-area">
+                                <div class="saved-vocabulary">
+                                    <span>1</span>
+                                    <span class="per-saved-vocabulary">apple</span>
+                                    <button>Look Up</button>
+                                </div>
+                                <div class="saved-vocabulary">
+                                    <span>2</span>
+                                    <span class="per-saved-vocabulary">orange</span>
+                                    <button>Look Up</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -113,7 +120,29 @@
     <!-- 引用JS -->
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', () => {
-            
+            const token = window.localStorage.getItem('JWT_token')
+            const headers = {
+                Authorization: `Bearer ${token}`
+            }
+
+            fetch(`/api/User/profile`, { headers })
+                .then(response => {
+                    if (response.status === 401) {
+                        alert("Your sign in status has expired. Please sign in again.")
+                        window.location.assign("/newstrek/sign-in.html")
+                    }
+                    else if (response.status === 403) {
+                        alert("Your identity authentication token is not valid. Please contact the developer, thanks!")
+                        window.location.assign("/newstrek/sign-in.html")
+                    }
+                    return response
+                })
+                .then(data => {
+                    console.log(data)
+                })
+                .catch(error => {
+                    console.error('Error in GET request to get user profile', error);
+                })
         })
     </script>
 </body>
