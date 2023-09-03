@@ -18,6 +18,10 @@ builder.Services.AddControllers();
 var DbConnectionString = System.Environment.GetEnvironmentVariable("NewsTrekDbConnectionString");
 builder.Services.AddDbContext<NewsTrekDbContext>(options => options.UseSqlServer(DbConnectionString));
 
+builder.Services.AddSingleton<NewsCrawlerService>();
+
+builder.Services.AddHostedService<NewsCrawlerTimerService>();
+
 builder.Services.AddScoped<IOpenAiService, OpenAiService>();
 
 builder.Services.AddElasticSearch(builder.Configuration);

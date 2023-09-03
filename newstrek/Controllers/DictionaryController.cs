@@ -5,6 +5,9 @@ using AngleSharp.Dom;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json;
+using System.IdentityModel.Tokens.Jwt;
+using newstrek.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace crawler_test.Controllers
 {
@@ -89,12 +92,12 @@ namespace crawler_test.Controllers
             }
         }
 
-        /* 串接英文辭典API：棄用 */
+        /* 串接英文辭典API */
         // Key for Collegiate® Dictionary with Audio / Collegiate® Thesaurus API
         string? DictionaryApiKey = Environment.GetEnvironmentVariable("DictionaryApiKey");
-        string? ThesaurusApiKey = Environment.GetEnvironmentVariable("ThesaurusApiKey");
+        //string? ThesaurusApiKey = Environment.GetEnvironmentVariable("ThesaurusApiKey");
 
-        string? wordnikApiKey = Environment.GetEnvironmentVariable("wordnikApiKey");
+        //string? wordnikApiKey = Environment.GetEnvironmentVariable("wordnikApiKey");
 
         [HttpGet("look-up-words")]
         public async Task<IActionResult> LookUpWords(string word)
@@ -127,6 +130,37 @@ namespace crawler_test.Controllers
                 // Handle exceptions
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPost("save-vocabulary")]
+        public async Task<IActionResult> SaveVocabulary([FromQuery] string? word)
+        {
+            string authorizationHeader = HttpContext.Request.Headers["Authorization"];
+            if (authorizationHeader != null && authorizationHeader.StartsWith("Bearer "))
+            {
+                // extracts the JWT token from the header by removing the first 7 characters ("Bearer ")
+                string jwtToken = authorizationHeader.Substring(7);
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtTokenObject = tokenHandler.ReadJwtToken(jwtToken);
+
+                // Extract the user id involved in JWT
+                var userIdClaim = jwtTokenObject.Claims.Where(c => c.Type.Contains("nameidentifier")).Select(s => s.Value).ToList();
+                Console.WriteLine(userIdClaim);
+                bool vocabularyIsExist = await _newsTrekDbContext.Vocabularies.AnyAsync(v => v.Word == word && v.UserId == long.Parse(userIdClaim[0]));
+
+                if (!vocabularyIsExist)
+                {
+                    await _newsTrekDbContext.Vocabularies.AddAsync(new Vocabulary { Word = word, UserId = long.Parse(userIdClaim[0]) });
+                    await _newsTrekDbContext.SaveChangesAsync();
+
+                    return Ok(new { response = $"Vocabulary \"{word}\" saved" });
+                }
+
+                return Ok(new { response = $"Vocabulary \"{word}\" is already saved in database" });
+            }
+
+            return BadRequest("userId claim is missing or invalid");
         }
     }
 }
