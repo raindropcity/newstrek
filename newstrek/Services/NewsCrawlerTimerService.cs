@@ -19,15 +19,16 @@
             while (!stoppingToken.IsCancellationRequested)
             {
                 // Get the current time and check if it's the desired time to crawl news
-                // Create a DateTime in UTC
-                DateTime utcDateTime = DateTime.UtcNow;
-                // Taiwan time zone
-                TimeZoneInfo taiwanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Taipei Standard Time");
-                // Convert to Taiwan time
-                DateTime currentTime = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, taiwanTimeZone);
-                //var currentTime = DateTime.UtcNow;
-                var desiredTime = new TimeSpan(3, 0, 0);
-                // 每天清晨3:00 - 3:59 project有run的話，啟動爬蟲新聞
+                //// Create a DateTime in UTC
+                //DateTime utcDateTime = DateTime.UtcNow;
+                //// Taiwan time zone
+                //TimeZoneInfo taiwanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Taipei Standard Time");
+                //// Convert to Taiwan time
+                //DateTime currentTime = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, taiwanTimeZone);
+                var currentTime = DateTime.UtcNow;
+                // 預設是英國時間，慢台灣時區8小時，因此凌晨3點往前推8小時為19點
+                var desiredTime = new TimeSpan(19, 0, 0);
+                // 每天台灣時間清晨3:00 - 3:59 project有run的話，啟動爬蟲新聞
                 if (currentTime.TimeOfDay >= desiredTime && currentTime.TimeOfDay < desiredTime.Add(TimeSpan.FromHours(1)))
                 {
                     // Execute the news crawling task here
