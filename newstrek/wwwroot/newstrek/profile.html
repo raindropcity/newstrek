@@ -167,17 +167,51 @@
                     if (savedVocabulary) savedVocabularyArea.innerHTML = savedVocabulary
                     else savedVocabularyArea.textContent = "You have not saved any vocabulary"
 
-                    // Look up saved vocabulary
+                    // Look up saved vocabulary || Delete saved vocabulary
                     savedVocabularyArea.addEventListener('click', (event) => {
                         if (event.target.classList.contains("look-up-saved-word-btn")) {
                             const vocabulary = event.target.parentElement.previousElementSibling.lastElementChild.textContent
                             lookUpWord(vocabulary, headers)
+                        }
+
+                        if (event.target.classList.contains("delete-saved-word-btn")) {
+                            const vocabulary = event.target.parentElement.previousElementSibling.lastElementChild.textContent
+                            deleteWord(vocabulary, token)
                         }
                     })
                 })
                 .catch(error => {
                     console.error('Error in GET request to get user profile', error);
                 })
+
+            function deleteWord(vocabulary, token) {
+                fetch(`/Dictionary/delete-saved-vocabulary?word=${vocabulary}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                    .then(response => {
+                        if (response.status === 401) {
+                            alert("Your sign in status has expired. Please sign in again.")
+                            window.location.assign("/newstrek/sign-in.html")
+                        }
+                        else if (response.status === 403) {
+                            alert("Your identity authentication token is not valid. Please contact the developer, thanks!")
+                            window.location.assign("/newstrek/sign-in.html")
+                        }
+                        return response.json()
+                    })
+                    .then(data => {
+                        console.log(data)
+                    })
+                    .catch(error => {
+                        console.log("Error while sending DELETE request", error)
+                    })
+
+                // Reload the profile page to display the latest saved vocabulary
+                window.location.href = window.location.href
+            }
 
             function lookUpWord(vocabulary, headers) {
                 const defCard_1 = document.querySelector(".ref-1 .blog-text")
