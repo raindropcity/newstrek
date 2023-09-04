@@ -5,13 +5,14 @@
     <meta charset="utf-8" />
     <title>NewsTrek</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/profile.css">
     <link rel="stylesheet" href="../css/webster.css">
     <link rel="stylesheet" href="../css/longman.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-          integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
+        integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital@1&display=swap" rel="stylesheet">
 </head>
 
@@ -22,15 +23,17 @@
                 <div class="vocabulary" id="profile-content">
                     <div class="blog" id="profile">
                         <div class="blog-text">
-                            <h4><span>Username : </span> </h4>
-                            <h4>Your interested topic :</h4>
-                            <div class="interested-topic-area">
-                                <h5>World</h5>
+                            <h4 id="username"><span>Username : </span> </h4>
+                            <h4 id="interested-topic-title">Your interested topic :</h4>
+                            <div id="interested-topic-area">
+                                <!-- <div class="interested-topic">
+                                    <h5>World</h5>
+                                </div>
+                                <div class="interested-topic">
+                                    <h5>Sports</h5>
+                                </div> -->
                             </div>
-                            <div class="interested-topic-area">
-                                <h5>Sports</h5>
-                            </div>
-                        </div> 
+                        </div>
                     </div>
                     <div class="def-modal hidden">
                         <h5>X</h5>
@@ -53,14 +56,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="vocabulary ref-3 hidden">
-                            <div class="blog">
-                                <h3>資料來源</h3>
-                                <div class="blog-text">
-
-                                </div>
-                            </div>
-                        </div>
                         <div class="right-arrow">
                             <i class="fas fa-angle-right"></i>
                         </div>
@@ -69,28 +64,19 @@
             </div>
             <div class="right-header">
                 <h1 class="name">
-                    Your<span>  Vocabulary</span>
+                    Your<span> Vocabulary</span>
                 </h1>
                 <!-- search bar -->
-                <form id="search-bar" onsubmit="event.preventDefault();" role="search">
-                    <label for="search">Search for stuff</label>
-                    <input id="search" type="search" placeholder="Search your vocabulary" autofocus required />
+                <!--<form id="search-bar" onsubmit="event.preventDefault();" role="search">
+                    <label for="search-saved-word">Search for stuff</label>
+                    <input id="search-saved-word" type="search" placeholder="Search your vocabulary" autofocus required />
                     <button id="search-saved-word-btn" type="submit">Go</button>
-                </form>
+                </form>-->
                 <div class="right-header-footer">
                     <div class="vocabulary">
                         <div class="blog">
-                            <div class="blog-text saved-vocabulary-area">
-                                <div class="saved-vocabulary">
-                                    <span>1</span>
-                                    <span class="per-saved-vocabulary">apple</span>
-                                    <button>Look Up</button>
-                                </div>
-                                <div class="saved-vocabulary">
-                                    <span>2</span>
-                                    <span class="per-saved-vocabulary">orange</span>
-                                    <button>Look Up</button>
-                                </div>
+                            <div class="blog-text" id="saved-vocabulary-area">
+                                
                             </div>
                         </div>
                     </div>
@@ -106,7 +92,8 @@
         <a href="/newstrek/category.html" class="control control-4 active-btn" data-id="blogs" title="News">
             <i class="far fa-newspaper"></i>
         </a>
-        <a href="/newstrek/sentence.html" class="control control-3 active-btn" data-id="portfolio" title="Make a Sentence">
+        <a href="/newstrek/sentence.html" class="control control-3 active-btn" data-id="portfolio"
+            title="Make a Sentence">
             <i class="far fa-comment-dots"></i>
         </a>
         <a href="/newstrek/profile.html" class="control control-2 active-btn" data-id="about" title="Your Profile">
@@ -120,6 +107,11 @@
     <!-- 引用JS -->
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', () => {
+            const username = document.querySelector("#username")
+            const interestedTopicArea = document.querySelector("#interested-topic-area")
+            const savedVocabularyArea = document.querySelector("#saved-vocabulary-area")
+            const searchBtn = document.querySelector("#search-saved-word-btn")
+
             const token = window.localStorage.getItem('JWT_token')
             const headers = {
                 Authorization: `Bearer ${token}`
@@ -135,14 +127,165 @@
                         alert("Your identity authentication token is not valid. Please contact the developer, thanks!")
                         window.location.assign("/newstrek/sign-in.html")
                     }
-                    return response
+                    return response.json()
                 })
                 .then(data => {
                     console.log(data)
+                    // Username
+                    var textNode = document.createTextNode(data.name);
+                    username.appendChild(textNode)
+                    // Interested Topic
+                    let interestedTopic = ""
+                    data.userInterestedTopic.forEach(item => {
+                        interestedTopic += `
+                            <div class="interested-topic">
+                                <h5>${item}</h5>
+                            </div>
+                        `
+                    })
+
+                    if (interestedTopic) interestedTopicArea.innerHTML = interestedTopic
+                    else interestedTopicArea.textContent = "You did not select your interested topic"
+
+                    // Saved Vocabulary
+                    let savedVocabulary = ""
+                    for (let i = 0; i < data.userSavedVocabulary.length; i++) {
+                        savedVocabulary += `
+                            <div class="saved-vocabulary">
+                                <div class="left-saved-vocabulary">
+                                    <span>${i + 1}</span>
+                                    <span class="per-saved-vocabulary">${data.userSavedVocabulary[i]}</span>
+                                </div>
+                                <div class="right-saved-vocabulary">
+                                    <button class="delete-saved-word-btn">Delete</button>
+                                    <button class="look-up-saved-word-btn">Look Up</button>
+                                </div>
+                            </div>
+                        `
+                    }
+
+                    if (savedVocabulary) savedVocabularyArea.innerHTML = savedVocabulary
+                    else savedVocabularyArea.textContent = "You have not saved any vocabulary"
+
+                    // Look up saved vocabulary
+                    savedVocabularyArea.addEventListener('click', (event) => {
+                        if (event.target.classList.contains("look-up-saved-word-btn")) {
+                            const vocabulary = event.target.parentElement.previousElementSibling.lastElementChild.textContent
+                            lookUpWord(vocabulary, headers)
+                        }
+                    })
                 })
                 .catch(error => {
                     console.error('Error in GET request to get user profile', error);
                 })
+
+            function lookUpWord(vocabulary, headers) {
+                const defCard_1 = document.querySelector(".ref-1 .blog-text")
+                const defCard_2 = document.querySelector(".ref-2 .blog-text")
+                const defModal = document.querySelector(".def-modal")
+                const x = document.querySelector(".def-modal h5")
+
+                // When "x" been clicked, set the css of def-modal from "show-up" to "hidden"
+                x.addEventListener('click', () => {
+                    defModal.classList.remove('show-up')
+                    defModal.classList.add('hidden')
+                })
+
+                fetch(`/Dictionary/look-up-words-crawler-Merriam-Webster?word=${vocabulary}`, { headers })
+                    .then(response => {
+                        if (response.status === 401) {
+                            alert("Your sign in status has expired. Please sign in again.")
+                            window.location.assign("/newstrek/sign-in.html")
+                        }
+                        else if (response.status === 403) {
+                            alert("Your identity authentication token is not valid. Please contact the developer, thanks!")
+                            window.location.assign("/newstrek/sign-in.html")
+                        }
+                        return response
+                    })
+                    .then(data => {
+                        data.text().then((content) => {
+                            if (content) defCard_1.innerHTML = content
+                            else if (!content) defCard_1.innerHTML = `\"${vocabulary}\" is not included in Merriam Webster Dictionary.`
+                        })
+                    })
+                    .catch(error => {
+                        console.error('Error in GET request to crwal vocabulary in Merriam Webster', error);
+                    })
+
+                fetch(`/Dictionary/look-up-words-crawler-Longman?word=${vocabulary}`, { headers })
+                    .then(data => {
+                        data.text().then((content) => {
+                            if (content) defCard_2.innerHTML = content
+                            else if (!content) defCard_2.innerHTML = `\"${vocabulary}\" is not included in Longman Dictionary.`
+                        })
+                    })
+                    .catch(error => {
+                        console.error('Error in GET request to crwal vocabulary in Longman', error);
+                    })
+
+                defModal.classList.remove('hidden')
+                defModal.classList.add('show-up')
+            }
+
+            // 換字典
+            const leftArrow = document.querySelector('.left-arrow')
+            const rightArrow = document.querySelector('.right-arrow')
+            const headerPhotos = document.querySelectorAll('.def-modal .vocabulary')
+
+            function switchHeaderPhoto() {
+                if (leftArrow) {
+                    leftArrow.addEventListener('click', function EventHandler() {
+                        const headerPhotoArray = []
+                        headerPhotos.forEach((photo) => {
+                            headerPhotoArray.push(photo)
+                        })
+
+                        const showUpPhoto = document.querySelector('.def-modal .show-up')
+                        const index = headerPhotoArray.indexOf(showUpPhoto)
+
+                        if ((index - 1) < 0) {
+                            showUpPhoto.classList.remove('show-up')
+                            showUpPhoto.classList.add('hidden')
+                            headerPhotos[headerPhotos.length - 1].classList.add('show-up')
+                            headerPhotos[headerPhotos.length - 1].classList.remove('hidden')
+                        }
+                        else if ((index - 1) >= 0) {
+                            showUpPhoto.classList.add('hidden')
+                            showUpPhoto.classList.remove('show-up')
+                            headerPhotos[index - 1].classList.add('show-up')
+                            headerPhotos[index - 1].classList.remove('hidden')
+                        }
+                    })
+                }
+
+                if (rightArrow) {
+                    rightArrow.addEventListener('click', function EventHandler() {
+                        const headerPhotoArray = []
+                        headerPhotos.forEach((photo) => {
+                            headerPhotoArray.push(photo)
+                        })
+
+                        const showUpPhoto = document.querySelector('.def-modal .show-up')
+                        const index = headerPhotoArray.indexOf(showUpPhoto)
+
+                        if ((index + 1) >= headerPhotos.length) {
+                            showUpPhoto.classList.remove('show-up')
+                            showUpPhoto.classList.add('hidden')
+                            headerPhotos[0].classList.add('show-up')
+                            headerPhotos[0].classList.remove('hidden')
+                        }
+                        else if ((index + 1) < headerPhotos.length) {
+                            showUpPhoto.classList.add('hidden')
+                            showUpPhoto.classList.remove('show-up')
+                            headerPhotos[index + 1].classList.add('show-up')
+                            headerPhotos[index + 1].classList.remove('hidden')
+                        }
+                    })
+                }
+            }
+
+            switchHeaderPhoto()
         })
     </script>
 </body>
