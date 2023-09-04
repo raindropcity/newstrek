@@ -15,7 +15,7 @@ builder.Services.Configure<OpenAiConfig>(options => options.Key = OpenAiKey);
 
 builder.Services.AddControllers();
 
-var DbConnectionString = System.Environment.GetEnvironmentVariable("NewsTrekDbConnectionString");
+var DbConnectionString = System.Environment.GetEnvironmentVariable("AWS_RDS_DB_ConnectionStrings");
 builder.Services.AddDbContext<NewsTrekDbContext>(options => options.UseSqlServer(DbConnectionString));
 
 builder.Services.AddSingleton<NewsCrawlerService>();
