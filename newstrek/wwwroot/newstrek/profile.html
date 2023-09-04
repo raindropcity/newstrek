@@ -11,8 +11,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-        integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+          integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital@1&display=swap" rel="stylesheet">
 </head>
 
@@ -76,7 +76,7 @@
                     <div class="vocabulary">
                         <div class="blog">
                             <div class="blog-text" id="saved-vocabulary-area">
-                                
+
                             </div>
                         </div>
                     </div>
@@ -93,7 +93,7 @@
             <i class="far fa-newspaper"></i>
         </a>
         <a href="/newstrek/sentence.html" class="control control-3 active-btn" data-id="portfolio"
-            title="Make a Sentence">
+           title="Make a Sentence">
             <i class="far fa-comment-dots"></i>
         </a>
         <a href="/newstrek/profile.html" class="control control-2 active-btn" data-id="about" title="Your Profile">
@@ -138,10 +138,10 @@
                     let interestedTopic = ""
                     data.userInterestedTopic.forEach(item => {
                         interestedTopic += `
-                            <div class="interested-topic">
-                                <h5>${item}</h5>
-                            </div>
-                        `
+                                <div class="interested-topic">
+                                    <h5>${item}</h5>
+                                </div>
+                            `
                     })
 
                     if (interestedTopic) interestedTopicArea.innerHTML = interestedTopic
@@ -151,17 +151,17 @@
                     let savedVocabulary = ""
                     for (let i = 0; i < data.userSavedVocabulary.length; i++) {
                         savedVocabulary += `
-                            <div class="saved-vocabulary">
-                                <div class="left-saved-vocabulary">
-                                    <span>${i + 1}</span>
-                                    <span class="per-saved-vocabulary">${data.userSavedVocabulary[i]}</span>
+                                <div class="saved-vocabulary">
+                                    <div class="left-saved-vocabulary">
+                                        <span>${i + 1}</span>
+                                        <span class="per-saved-vocabulary">${data.userSavedVocabulary[i]}</span>
+                                    </div>
+                                    <div class="right-saved-vocabulary">
+                                        <button class="delete-saved-word-btn">Delete</button>
+                                        <button class="look-up-saved-word-btn">Look Up</button>
+                                    </div>
                                 </div>
-                                <div class="right-saved-vocabulary">
-                                    <button class="delete-saved-word-btn">Delete</button>
-                                    <button class="look-up-saved-word-btn">Look Up</button>
-                                </div>
-                            </div>
-                        `
+                            `
                     }
 
                     if (savedVocabulary) savedVocabularyArea.innerHTML = savedVocabulary
