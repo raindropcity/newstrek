@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.IdentityModel.Tokens.Jwt;
 using newstrek.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace crawler_test.Controllers
 {
@@ -161,6 +162,33 @@ namespace crawler_test.Controllers
             }
 
             return BadRequest("userId claim is missing or invalid");
+        }
+
+        [HttpDelete("delete-saved-vocabulary")]
+        public async Task<IActionResult> DeleteSavedVocabulary([FromQuery] string? word)
+        {
+            try
+            {
+                var userIdentity = HttpContext.User.Identity as ClaimsIdentity;
+                var email = userIdentity.FindFirst(ClaimTypes.Email)?.Value;
+
+                var vocabularyToDelete = await _newsTrekDbContext.Users
+                    .Where(u => u.Email == email)
+                    .SelectMany(u => u.Vacabularies)
+                    .Where(v => v.Word == word)
+                    .FirstOrDefaultAsync();
+
+                // "Remove" method does not return a task that can be awaited. It's a synchronous operation, and you don't need to await it
+                _newsTrekDbContext.Vocabularies.Remove(vocabularyToDelete);
+                await _newsTrekDbContext.SaveChangesAsync();
+
+                return Ok(new { Result = "Deletion complete" });
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
