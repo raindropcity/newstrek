@@ -110,7 +110,14 @@
             const username = document.querySelector("#username")
             const interestedTopicArea = document.querySelector("#interested-topic-area")
             const savedVocabularyArea = document.querySelector("#saved-vocabulary-area")
-            const searchBtn = document.querySelector("#search-saved-word-btn")
+
+            const logOutBtn = document.querySelector(".controlls a[title=\"LogOut\"]")
+
+            logOutBtn.addEventListener('click', () => {
+                if (window.localStorage.getItem("JWT_token")) {
+                    window.localStorage.removeItem("JWT_token")
+                }
+            })
 
             const token = window.localStorage.getItem('JWT_token')
             const headers = {
@@ -204,13 +211,12 @@
                     })
                     .then(data => {
                         console.log(data)
+                        // Reload the profile page to display the latest saved vocabulary
+                        window.location.href = window.location.href
                     })
                     .catch(error => {
                         console.log("Error while sending DELETE request", error)
                     })
-
-                // Reload the profile page to display the latest saved vocabulary
-                window.location.href = window.location.href
             }
 
             function lookUpWord(vocabulary, headers) {
