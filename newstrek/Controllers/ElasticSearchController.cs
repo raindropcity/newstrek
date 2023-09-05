@@ -31,7 +31,7 @@ namespace newstrek.Controllers
                     q => q.QueryString(
                         d => d.Query('*' + keyword + '*')
                     )
-                ).Size(10) // give me the first 10 results
+                ).Size(18) // give me the first 10 results
             );
 
             return Ok(results.Documents.ToList());
@@ -51,7 +51,7 @@ namespace newstrek.Controllers
                         )
                         .Query(category)
                     )
-                ).Size(10) // give me the first 10 results
+                ).Size(18) // give me the first 10 results
             );
 
             return Ok(results.Documents.ToList());

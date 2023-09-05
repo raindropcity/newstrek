@@ -13,6 +13,42 @@
         left: 50%;
         transform: translate(-50%, -50%);
         margin: 0;
+
+        h3 {
+          font-size: 2rem;
+        }
+
+        .blog-text {
+          border-top: 8px solid #178286;
+
+          div {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            margin-bottom: .5rem;
+            padding: 0 0 .5rem .8rem;
+            border-bottom: #178286 1px solid;
+
+            span {
+              display: flex;
+              justify-content: end;
+              align-items: center;
+              width: 1.2rem;
+              color: #178286;
+              font-size: 1.1rem;
+              font-weight: 600;
+            }
+
+            a {
+              font-size: 1.2rem;
+              margin-left: 1rem;
+
+              &:hover {
+                color: #178286;
+              }
+            }
+          }
+        }
       }
     }
   }
