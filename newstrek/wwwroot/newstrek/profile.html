@@ -211,13 +211,12 @@
                     })
                     .then(data => {
                         console.log(data)
+                        // Reload the profile page to display the latest saved vocabulary
+                        window.location.href = window.location.href
                     })
                     .catch(error => {
                         console.log("Error while sending DELETE request", error)
                     })
-
-                // Reload the profile page to display the latest saved vocabulary
-                window.location.href = window.location.href
             }
 
             function lookUpWord(vocabulary, headers) {
