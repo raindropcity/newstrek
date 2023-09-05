@@ -80,11 +80,18 @@
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', () => {
             const submitBtn = document.querySelector(".sign-in-submit-btn")
+            const logOutBtn = document.querySelector(".controlls a[title=\"LogOut\"]")
             const clearBtn = document.querySelector(".clear-btn")
 
             const word_1 = document.querySelector("#word-1")
             const word_2 = document.querySelector("#word-2")
             const word_3 = document.querySelector("#word-3")
+
+            logOutBtn.addEventListener('click', () => {
+                if (window.localStorage.getItem("JWT_token")) {
+                    window.localStorage.removeItem("JWT_token")
+                }
+            })
 
             clearBtn.addEventListener('click', (event) => {
                 event.preventDefault()
