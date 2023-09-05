@@ -153,7 +153,10 @@ function performLookup(vocabulary) {
                 .then((content) => {
                     if (content) {
                         // save vocabulary
-                        defCard_1.addEventListener('click', (event) => {
+                        // Add the event listener
+                        defCard_1.addEventListener('click', handleSaveVocabularyClick);
+
+                        function handleSaveVocabularyClick(event) {
                             if (event.target === document.querySelector(".save-vocabulary-btn")) {
                                 fetch(`/Dictionary/save-vocabulary?word=${vocabulary}`, {
                                     method: "POST",
@@ -174,13 +177,16 @@ function performLookup(vocabulary) {
                                         return response.json()
                                     })
                                     .then(data => {
-                                        console.log(data)
+                                        console.log(data);
+                                        alert(data.response)
+                                        // Remove the event listener after a successful POST request
+                                        defCard_1.removeEventListener('click', handleSaveVocabularyClick);
                                     })
                                     .catch(error => {
-                                        console.error('Error in GET request to save vocabulary', error);
-                                    })
+                                        console.error('Error in POST request to save vocabulary', error);
+                                    });
                             }
-                        })
+                        }
                     }
                 })
         })

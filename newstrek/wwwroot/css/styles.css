@@ -233,6 +233,19 @@ section {
   height: 95%;
   overflow: scroll;
 }
+.header-content .left-header .vocabulary .blog .blog-text .save-vocabulary-btn-area {
+  height: 1.6rem;
+}
+.header-content .left-header .vocabulary .blog .blog-text .save-vocabulary-btn-area .save-vocabulary-btn {
+  width: 50%;
+  height: 100%;
+  border-radius: 5px;
+  border: none;
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
 .header-content .left-header .vocabulary .blog .blog-text::-webkit-scrollbar {
   width: 10px;
 }
