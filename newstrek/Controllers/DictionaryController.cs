@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using newstrek.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using newstrek.Services;
 
 namespace crawler_test.Controllers
 {
@@ -19,11 +20,13 @@ namespace crawler_test.Controllers
     {
         private readonly NewsTrekDbContext _newsTrekDbContext;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly RedisCacheManager _redisCacheManager;
 
-        public DictionaryController (NewsTrekDbContext newsTrekDbContext, IHttpClientFactory httpClientFactory)
+        public DictionaryController (NewsTrekDbContext newsTrekDbContext, IHttpClientFactory httpClientFactory, RedisCacheManager redisCacheManager)
         {
             _newsTrekDbContext = newsTrekDbContext;
             _httpClientFactory = httpClientFactory;
+            _redisCacheManager = redisCacheManager;
         }
 
         // 爬蟲英文辭典網頁HTML結構
@@ -32,16 +35,25 @@ namespace crawler_test.Controllers
         {
             try
             {
-                var config = Configuration.Default.WithDefaultLoader();
-                var address = $"https://www.merriam-webster.com/dictionary/{word}";
-                var context = BrowsingContext.New(config);
-                var document = await context.OpenAsync(address);
+                var cacheKey = $"MerriamWebster_{word}";
+                // Check if the result is cached
+                string? htmlStructure = await _redisCacheManager.GetStringAsync(cacheKey);
 
-                var def = document.QuerySelectorAll(".entry-word-section-container");
-                string? htmlStructure = "";
-                foreach (var item in def)
+                if (htmlStructure == null)
                 {
-                    htmlStructure += item.OuterHtml;
+                    var config = Configuration.Default.WithDefaultLoader();
+                    var address = $"https://www.merriam-webster.com/dictionary/{word}";
+                    var context = BrowsingContext.New(config);
+                    var document = await context.OpenAsync(address);
+
+                    var def = document.QuerySelectorAll(".entry-word-section-container");
+                    htmlStructure = "";
+                    foreach (var item in def)
+                    {
+                        htmlStructure += item.OuterHtml;
+                    }
+                    // Store the result in cache
+                    await _redisCacheManager.SetStringAsync(cacheKey, htmlStructure);
                 }
 
                 return Ok(htmlStructure);
@@ -65,16 +77,25 @@ namespace crawler_test.Controllers
         {
             try
             {
-                var config = Configuration.Default.WithDefaultLoader();
-                var address = $"https://www.ldoceonline.com/dictionary/{word}";
-                var context = BrowsingContext.New(config);
-                var document = await context.OpenAsync(address);
+                var cacheKey = $"Longman_{word}";
+                // Check if the result is cached
+                string? htmlStructure = await _redisCacheManager.GetStringAsync(cacheKey);
 
-                var def = document.QuerySelectorAll(".ldoceEntry");
-                string? htmlStructure = "";
-                foreach (var item in def)
+                if (htmlStructure == null)
                 {
-                    htmlStructure += item.OuterHtml;
+                    var config = Configuration.Default.WithDefaultLoader();
+                    var address = $"https://www.ldoceonline.com/dictionary/{word}";
+                    var context = BrowsingContext.New(config);
+                    var document = await context.OpenAsync(address);
+
+                    var def = document.QuerySelectorAll(".ldoceEntry");
+                    htmlStructure = "";
+                    foreach (var item in def)
+                    {
+                        htmlStructure += item.OuterHtml;
+                    }
+                    // Store the result in cache
+                    await _redisCacheManager.SetStringAsync(cacheKey, htmlStructure);
                 }
 
                 return Ok(htmlStructure);

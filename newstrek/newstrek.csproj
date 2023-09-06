@@ -18,6 +18,7 @@
     </PackageReference>
     <PackageReference Include="NEST" Version="7.17.5" />
     <PackageReference Include="OpenAI" Version="1.7.2" />
+    <PackageReference Include="StackExchange.Redis" Version="2.6.122" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
