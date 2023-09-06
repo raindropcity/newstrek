@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using newstrek.Configurations;
 using newstrek.Services;
+using Microsoft.Extensions.Options;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,8 @@ builder.Services.AddHostedService<NewsCrawlerTimerService>();
 builder.Services.AddScoped<IOpenAiService, OpenAiService>();
 
 builder.Services.AddElasticSearch(builder.Configuration);
+
+builder.Services.AddSingleton<RedisCacheManager>();
 
 builder.Services.AddHttpClient();
 
