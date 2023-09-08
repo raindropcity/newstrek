@@ -188,7 +188,7 @@ namespace newstrek.Controllers
 
         [HttpGet("profile")]
         [Authorize]
-        public async Task<ActionResult/*<UserSignUpModel>*/> GetProfile()
+        public async Task<ActionResult> GetProfile()
         {
             try
             {
@@ -233,6 +233,39 @@ namespace newstrek.Controllers
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
+        }
+
+        [HttpPut("modify-interested-topic")]
+        public async Task<IActionResult> ModifyInterestedTopic([FromBody] InterestedTopicDto selectedTopic)
+        {
+            var userIdentity = HttpContext.User.Identity as ClaimsIdentity;
+            var email = userIdentity.FindFirst(ClaimTypes.Email)?.Value;
+
+            var specificUserInterestedTopic = await _newsTrekDbContext.Users
+                .Where(u => u.Email == email)
+                .Select(s => s.InterestedTopic)
+                .SingleOrDefaultAsync();
+
+            if (specificUserInterestedTopic != null)
+            {
+                specificUserInterestedTopic.world = selectedTopic.world;
+                specificUserInterestedTopic.business = selectedTopic.business;
+                specificUserInterestedTopic.politics = selectedTopic.politics;
+                specificUserInterestedTopic.health = selectedTopic.health;
+                specificUserInterestedTopic.climate = selectedTopic.climate;
+                specificUserInterestedTopic.tech = selectedTopic.tech;
+                specificUserInterestedTopic.entertainment = selectedTopic.entertainment;
+                specificUserInterestedTopic.science = selectedTopic.science;
+                specificUserInterestedTopic.history = selectedTopic.history;
+                specificUserInterestedTopic.sports = selectedTopic.sports;
+
+                await _newsTrekDbContext.SaveChangesAsync();
+            }
+
+            return Ok(new { 
+                response = "Modification saved",
+                userInterestedTopic = specificUserInterestedTopic
+            });
         }
 
         private string GenerateJwtToken(User user)
