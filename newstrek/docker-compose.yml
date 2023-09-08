@@ -22,7 +22,7 @@ services:
     depends_on:
       - elasticsearch
     environment:
-      - ELASTICSEARCH_URL=https://54.151.151.164:9200
+      - ELASTICSEARCH_URL=http://54.151.151.164:9200
     networks:
       - elastic
 
