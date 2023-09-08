@@ -143,6 +143,11 @@
                     username.appendChild(textNode)
                     // Interested Topic
                     let interestedTopic = ""
+                    const modifyInterestedTopicBtn = `
+                        <button class=\"modify-interested-topic-btn\">
+                            Modify
+                        </button>
+                    `
                     data.userInterestedTopic.forEach(item => {
                         interestedTopic += `
                                 <div class="interested-topic">
@@ -151,8 +156,8 @@
                             `
                     })
 
-                    if (interestedTopic) interestedTopicArea.innerHTML = interestedTopic
-                    else interestedTopicArea.textContent = "You did not select your interested topic"
+                    if (interestedTopic) interestedTopicArea.innerHTML = interestedTopic + modifyInterestedTopicBtn
+                    else interestedTopicArea.innerHTML = "<p>You did not select your interested topic</p>" + modifyInterestedTopicBtn
 
                     // Saved Vocabulary
                     let savedVocabulary = ""
@@ -186,10 +191,89 @@
                             deleteWord(vocabulary, token)
                         }
                     })
+
+                    interestedTopicArea.addEventListener('click', (event) => {
+                        if (event.target.classList.contains("modify-interested-topic-btn")) {
+                            interestedTopicArea.innerHTML = `
+                                <div class="checkbox-area">
+                                    <label><input type="checkbox" name="world" ${data.userInterestedTopic.includes("world") ? "checked" : ""}> World</label>
+                                    <label><input type="checkbox" name="business" ${data.userInterestedTopic.includes("business") ? "checked" : ""}> Business</label>
+                                    <label><input type="checkbox" name="politics" ${data.userInterestedTopic.includes("politics") ? "checked" : ""}> Politics</label>
+                                    <label><input type="checkbox" name="health" ${data.userInterestedTopic.includes("health") ? "checked" : ""}> Health</label>
+                                    <label><input type="checkbox" name="climate" ${data.userInterestedTopic.includes("climate") ? "checked" : ""}> Climate</label>
+                                    <label><input type="checkbox" name="tech" ${data.userInterestedTopic.includes("tech") ? "checked" : ""}> Tech</label>
+                                    <label><input type="checkbox" name="entertainment" ${data.userInterestedTopic.includes("entertainment") ? "checked" : ""}> Entertainment</label>
+                                    <label><input type="checkbox" name="science" ${data.userInterestedTopic.includes("science") ? "checked" : ""}> Science</label>
+                                    <label><input type="checkbox" name="history" ${data.userInterestedTopic.includes("history") ? "checked" : ""}> History</label>
+                                    <label><input type="checkbox" name="sports" ${data.userInterestedTopic.includes("sports") ? "checked" : ""}> Sports</label>
+                                </div>
+                                <div class=\"interested-topic-modify-btn-area\">
+                                    <button class=\"modify-interested-topic-cancel-btn\">
+                                        Cancel
+                                    </button>
+                                    <button class=\"modify-interested-topic-confirm-btn\">
+                                        Confirm
+                                    </button>
+                                </div>
+                            `
+                        }
+
+                        if (event.target.classList.contains("modify-interested-topic-cancel-btn")) {
+                            if (interestedTopic) interestedTopicArea.innerHTML = interestedTopic + modifyInterestedTopicBtn
+                            else interestedTopicArea.innerHTML = "<p>You did not select your interested topic</p>" + modifyInterestedTopicBtn
+                        }
+
+                        if (event.target.classList.contains("modify-interested-topic-confirm-btn")) {
+                            const selectedTopic = {
+                                world: document.querySelector("#interested-topic-area input[name=\"world\"]").checked,
+                                business: document.querySelector("#interested-topic-area input[name=\"business\"]").checked,
+                                politics: document.querySelector("#interested-topic-area input[name=\"politics\"]").checked,
+                                health: document.querySelector("#interested-topic-area input[name=\"health\"]").checked,
+                                climate: document.querySelector("#interested-topic-area input[name=\"climate\"]").checked,
+                                tech: document.querySelector("#interested-topic-area input[name=\"tech\"]").checked,
+                                entertainment: document.querySelector("#interested-topic-area input[name=\"entertainment\"]").checked,
+                                science: document.querySelector("#interested-topic-area input[name=\"science\"]").checked,
+                                history: document.querySelector("#interested-topic-area input[name=\"history\"]").checked,
+                                sports: document.querySelector("#interested-topic-area input[name=\"sports\"]").checked
+                            }
+
+                            modifyInterestedTopic(selectedTopic, token)
+                        }
+                    })
                 })
                 .catch(error => {
                     console.error('Error in GET request to get user profile', error);
                 })
+
+            function modifyInterestedTopic(selectedTopic, token) {
+                fetch(`/api/User/modify-interested-topic`, {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(selectedTopic)
+                })
+                    .then(response => {
+                        if (response.status === 401) {
+                            alert("Your sign in status has expired. Please sign in again.")
+                            window.location.assign("/newstrek/sign-in.html")
+                        }
+                        else if (response.status === 403) {
+                            alert("Your identity authentication token is not valid. Please contact the developer, thanks!")
+                            window.location.assign("/newstrek/sign-in.html")
+                        }
+                        return response.json()
+                    })
+                    .then(data => {
+                        alert(data.response)
+                        // Reload the profile page to display the latest saved vocabulary
+                        window.location.href = window.location.href
+                    })
+                    .catch(error => {
+                        console.error('Error in PUT request to modify interested topic', error);
+                    })
+            }
 
             function deleteWord(vocabulary, token) {
                 fetch(`/Dictionary/delete-saved-vocabulary?word=${vocabulary}`, {
