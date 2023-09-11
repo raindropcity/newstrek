@@ -199,7 +199,7 @@ namespace newstrek.Controllers
 
                 var savedVocabulary = await _newsTrekDbContext.Users
                                         .Where(u => u.Email == email)
-                                        .SelectMany(u => u.Vacabularies) // Flatten the nested collection
+                                        .SelectMany(u => u.Vocabularies) // Flatten the nested collection
                                         .Select(v => v.Word) // Select the "Word" field
                                         .ToListAsync();
 
