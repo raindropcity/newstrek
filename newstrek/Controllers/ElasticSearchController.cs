@@ -7,6 +7,7 @@ using Nest;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Text.Json;
+using System.Security.Claims;
 
 namespace newstrek.Controllers
 {
@@ -121,19 +122,13 @@ namespace newstrek.Controllers
             string authorizationHeader = HttpContext.Request.Headers["Authorization"];
             if (authorizationHeader != null && authorizationHeader.StartsWith("Bearer "))
             {
-                // extracts the JWT token from the header by removing the first 7 characters ("Bearer ")
-                string jwtToken = authorizationHeader.Substring(7);
-
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var jwtTokenObject = tokenHandler.ReadJwtToken(jwtToken);
-
-                // Extract the Email involved in JWT
-                var emailClaim = jwtTokenObject.Claims.Where(c => c.Type.Contains("emailaddress")).Select(s => s.Value).ToList();
+                var userIdentity = HttpContext.User.Identity as ClaimsIdentity;
+                var emailClaim = userIdentity.FindFirst(ClaimTypes.Email)?.Value;
 
                 if (emailClaim != null)
                 {
                     // Use the extracted Email to query the specific user's InterestedTopic
-                    var userInterestedTopic = await _newsTrekDbContext.Users.Where(u => u.Email == emailClaim[0]).Select(s => s.InterestedTopic).ToListAsync();
+                    var userInterestedTopic = await _newsTrekDbContext.Users.Where(u => u.Email == emailClaim).Select(s => s.InterestedTopic).ToListAsync();
 
                     // Try to iterate the object(must use System.Reflection)
                     Type objectType = typeof(InterestedTopic);
@@ -172,24 +167,53 @@ namespace newstrek.Controllers
                 Console.WriteLine(item);
             }
 
-            foreach (var item in selectedInterestedTopic)
+            if (selectedInterestedTopic.Count > 0)
             {
-                var searchResponse = await _elasticClient.SearchAsync<News>(s => s
-                    .Query(q => q
-                        .MultiMatch(mm => mm
-                            .Fields(f => f
-                                .Field(fld => fld.Category, boost: 2)
-                                .Field(fld => fld.Article, boost: 1.5)
-                                .Field(fld => fld.Title)
+                foreach (var item in selectedInterestedTopic)
+                {
+                    var searchResponse = await _elasticClient.SearchAsync<News>(s => s
+                        .Query(q => q
+                            .MultiMatch(mm => mm
+                                .Fields(f => f
+                                    .Field(fld => fld.Category, boost: 2)
+                                    .Field(fld => fld.Article, boost: 1.5)
+                                    .Field(fld => fld.Title)
+                                )
+                                .Query(item)
                             )
-                            .Query(item)
                         )
-                    )
-                    .Size(100)
-                );
+                        .Size(100)
+                    );
 
-                result.Add(searchResponse);
+                    result.Add(searchResponse);
+                }
             }
+            else
+            {
+                List<string> allTopic = new List<string>()
+                {
+                    "world", "business", "politics", "health", "climate", "tech", "entertainment", "science", "history", "sports"
+                };
+                foreach (var item in allTopic)
+                {
+                    var searchResponse = await _elasticClient.SearchAsync<News>(s => s
+                        .Query(q => q
+                            .MultiMatch(mm => mm
+                                .Fields(f => f
+                                    .Field(fld => fld.Category, boost: 2)
+                                    .Field(fld => fld.Article, boost: 1.5)
+                                    .Field(fld => fld.Title)
+                                )
+                                .Query(item)
+                            )
+                        )
+                        .Size(100)
+                    );
+
+                    result.Add(searchResponse);
+                }
+            }
+
             List<News> allDocuments = result.SelectMany(response => response.Documents).ToList();
 
             // Random 10 篇
