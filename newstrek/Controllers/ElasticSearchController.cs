@@ -32,10 +32,15 @@ namespace newstrek.Controllers
                     q => q.QueryString(
                         d => d.Query('*' + keyword + '*')
                     )
-                ).Size(18) // give me the first 10 results
+                ).Size(18) // give me the first 18 results
             );
 
-            return Ok(results.Documents.ToList());
+            if (results.Documents.ToList().Count > 0)
+            {
+                return Ok(new { response = "Query successfully", result = results.Documents.ToList() });
+            }
+
+            return Ok(new { response = "No query results, please check your keyword" });
         }
 
         [Authorize]
@@ -52,7 +57,7 @@ namespace newstrek.Controllers
                         )
                         .Query(category)
                     )
-                ).Size(18) // give me the first 10 results
+                ).Size(18) // give me the first 18 results
             );
 
             return Ok(results.Documents.ToList());

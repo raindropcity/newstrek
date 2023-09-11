@@ -144,26 +144,34 @@
                         return response.json();
                     })
                     .then(data => {
-                        data.forEach((value, index) => {
-                            const url = value.url;
-                            const pattern = /\/(\d+)\//;
-                            const match = url.match(pattern);
-                            let number = 0;
+                        if (data.result) {
+                            data.result.forEach((value, index) => {
+                                const url = value.url;
+                                const pattern = /\/(\d+)\//;
+                                const match = url.match(pattern);
+                                let number = 0;
 
-                            if (match && match.length > 1) {
-                                number = match[1];
-                                console.log("Extracted Number:", number);
-                            } else {
-                                console.log("Number not found in URL.");
-                            }
+                                if (match && match.length > 1) {
+                                    number = match[1];
+                                    console.log("Extracted Number:", number);
+                                } else {
+                                    console.log("Number not found in URL.");
+                                }
 
-                            container.innerHTML += `
+                                container.innerHTML += `
                                 <div>
                                     <span>${index + 1}</span>
                                     <a href="/newstrek/news.html?num=${number}">${value.title}</a>
                                 </div>
                             `;
-                        });
+                            });
+                        } else {
+                            container.innerHTML = `
+                                <span id="no-result-prompt">${data.response}</span>
+                                <a href="/newstrek/category.html" id="no-result-redirect">Go back</a>
+                            `
+                        }
+
                         console.log(data);
                     })
                     .catch(error => {
