@@ -24,7 +24,7 @@
                 <form class="sign-up-form">
                     <div class="left-sign-up">
                         <div class="input-control">
-                            <input type="text" required placeholder="USER NAME" name="name" id="name">
+                            <input type="text" required placeholder="USER NAME(1 ~ 20 characters)" name="name" id="name">
                         </div>
                         <div class="input-control">
                             <input type="email" required placeholder="YOUR EMAIL" name="email" id="email">
@@ -78,6 +78,22 @@
 
             submitBtn.addEventListener('click', (event) => {
                 event.preventDefault()
+                let nextStepOrNot = true
+
+                if (document.querySelector("#name").value.trim().length < 1 || document.querySelector("#name").value.trim().length > 20) {
+                    alert("User name is not valid")
+                    nextStepOrNot =false
+                }
+
+                if (!document.querySelector("#email").value) {
+                    alert("Email is not valid")
+                    nextStepOrNot = false
+                }
+
+                if (!document.querySelector("#password").value) {
+                    alert("Password is not valid")
+                    nextStepOrNot = false
+                }
 
                 const userData = {
                     Name: document.querySelector("#name").value,
@@ -98,29 +114,30 @@
                     }
                 }
 
-                fetch("/api/User/signup", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(userData)
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            return response.json().then(data => Promise.reject(data.error))
-                        }
-                        return response.json()
+                if (nextStepOrNot) {
+                    fetch("/api/User/signup", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(userData)
                     })
-                    .then(data => {
-                        console.log(data)
-                        //window.localStorage.setItem('JWT_token', data.accessToken)
-                        alert("Sign up successfully, Please Sign in to start your trek!")
-                        window.location.assign('/newstrek/sign-in.html')
-                    })
-                    .catch(error => {
-                        alert(error === undefined ? "Email is not valid" : error)
-                    })
-
+                        .then(response => {
+                            if (!response.ok) {
+                                return response.json().then(data => Promise.reject(data.error))
+                            }
+                            return response.json()
+                        })
+                        .then(data => {
+                            console.log(data)
+                            //window.localStorage.setItem('JWT_token', data.accessToken)
+                            alert("Sign up successfully, Please Sign in to start your trek!")
+                            window.location.assign('/newstrek/sign-in.html')
+                        })
+                        .catch(error => {
+                            alert(error === undefined ? "Email is not valid" : error)
+                        })
+                }
             })
         })
     </script>
