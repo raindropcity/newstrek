@@ -1,3 +1,7 @@
+img {
+  display: none;
+}
+
 .entry-header-content {
   display: flex;
   align-items: center;
@@ -17,6 +21,10 @@
       cursor: default;
     }
   }
+}
+
+.header-ins .col {
+  display: none;
 }
 
 .entry-attr {

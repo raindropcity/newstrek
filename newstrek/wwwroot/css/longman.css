@@ -1,248 +1,523 @@
-.ref-2 .blog-text span {
-  display: block;
+:root {
+  --color-primary: #191d2b;
+  --color-secondary: #178286;
+  --color-white: #FFFFFF;
+  --color-black: #000;
+  --color-grey0: #f8f8f8;
+  --color-grey-1: #dbe1e8;
+  --color-grey-2: #b2becd;
+  --color-grey-3: #6c7983;
+  --color-grey-4: #454e56;
+  --color-grey-5: #2a2e35;
+  --color-grey-6: #12181b;
 }
-.ref-2 .blog-text .topics_container,
-.ref-2 .blog-text .HYPHENATION,
-.ref-2 .blog-text .PronCodes,
-.ref-2 .blog-text .LEVEL,
-.ref-2 .blog-text .FREQ,
-.ref-2 .blog-text .speaker,
-.ref-2 .blog-text script {
-  display: none;
+
+/*****  LDOCE  ***************************/
+.ldoceEntry {
+  line-height: 1.8rem;
 }
-.ref-2 .blog-text .ldoceEntry:has(.newline) {
-  display: none;
-}
-.ref-2 .blog-text .Head {
-  display: flex;
-  align-items: center;
+.ldoceEntry .Head {
+  padding-top: 0.5rem;
+  padding-left: 0.5rem;
   border-bottom: 3px #178286 solid;
 }
-.ref-2 .blog-text .Head .HWD {
+.ldoceEntry .speaker,
+.ldoceEntry .tooltip,
+.ldoceEntry img,
+.ldoceEntry .topics_container,
+.ldoceEntry .FREQ {
+  display: none;
+}
+
+.ldoceEntry .Entry {
+  font-size: 12pt;
+  text-align: justify;
+  display: block;
+  margin-top: 8px;
+}
+
+.ldoceEntry .Thesref {
+  color: var(--color-secondary);
+}
+
+.ldoceEntry .ABBR {
+  font-weight: bold;
+}
+
+.ldoceEntry .ACTIV {
+  display: none;
+}
+
+.ldoceEntry .AMEQUIV {
+  font-weight: bold;
+}
+
+.ldoceEntry .BOX {
+  display: none;
+}
+
+.ldoceEntry .BREQUIV {
+  font-weight: bold;
+}
+
+.ldoceEntry .COLLO {
+  font-weight: bold;
+  margin-left: 20px;
+}
+
+.ldoceEntry .ColloExa {
+  display: block;
+}
+
+.ldoceEntry .COLLOINEXA {
+  font-weight: bold;
+}
+
+.ldoceEntry .COMMENT {
+  display: none;
+}
+
+.ldoceEntry .COMP {
+  font-weight: bold;
+}
+
+.ldoceEntry .Crossrefto {
+  font-weight: bold;
+  font-size: 120%;
+}
+
+.ldoceEntry .DERIV {
+  font-weight: bold;
+  font-size: 120%;
+}
+
+.ldoceEntry .Entry {
+  font-size: 11pt;
+  text-align: justify;
+}
+
+.ldoceEntry .ErrorBox {
+  display: block;
+}
+
+.ldoceEntry .EXAMPLE {
+  display: block;
+  margin-left: 1rem;
+  margin-bottom: 0.8rem;
+  padding-left: 0.5rem;
+  color: var(--color-white);
+  border-bottom: 1px var(--color-secondary) solid;
+}
+
+.ldoceEntry .FIELD {
+  display: none;
+}
+
+.ldoceEntry .AC,
+.ldoceEntry .synopp {
+  color: #fff;
+  border-color: var(--color-secondary);
+  background-color: var(--color-secondary);
+}
+
+.ldoceEntry .FREQ {
+  color: var(--color-secondary);
+  border-color: var(--color-secondary);
+}
+
+.ldoceEntry .LEVEL {
+  color: var(--color-secondary);
+  font-size: 120%;
+}
+
+.ldoceEntry .FULLFORM {
+  font-weight: bold;
+}
+
+.ldoceEntry .GEO,
+.ldoceEntry .geo {
+  font-weight: normal;
+  color: var(--color-secondary);
+}
+
+.ldoceEntry .GLOSS {
+  color: var(--color-secondary);
+  font-weight: normal;
+  font-style: normal;
+}
+
+.ldoceEntry .GRAM,
+.bussdictEntry .GRAM {
+  color: var(--color-secondary);
+  font-weight: bold;
+  margin: 0 5px 10px 3px;
+}
+
+.ldoceEntry .GramExa {
+  display: block;
+}
+
+.ldoceEntry .HINTBOLD {
+  font-weight: bold;
+}
+
+.ldoceEntry .HINTITALIC {
+  font-style: italic;
+}
+
+.ldoceEntry .HINTTITLE {
+  font-weight: bold;
+}
+
+.ldoceEntry .frequent .HOMNUM {
+  vertical-align: super;
+  font-size: 12pt;
+  color: var(--color-secondary);
+  font-weight: bold;
+  margin-left: 0.5rem;
+}
+
+.ldoceEntry .HOMNUM {
+  vertical-align: super;
+  font-size: 12pt;
+  color: var(--color-secondary);
+  font-weight: bold;
+  margin-left: 0.5rem;
+}
+
+.ldoceEntry .HWD {
+  color: var(--color-secondary);
   font-size: 2rem;
-  font-weight: 700;
-  margin-right: 0.5rem;
-}
-.ref-2 .blog-text .Head .POS {
-  font-size: 1.5rem;
   font-weight: 600;
-  margin-left: 0.5rem;
 }
-.ref-2 .blog-text .Head .GRAM {
-  display: inline-flex;
-  margin-left: 1rem;
+
+.ldoceEntry .HYPHENATION,
+.ldoceEntry .PHRVBHWD {
+  display: none;
+  font-weight: bold;
+  font-size: 160%;
+  color: var(--color-secondary);
 }
-.ref-2 .blog-text .Sense {
-  line-height: 2rem;
-  margin-top: 0.5rem;
+
+.ldoceEntry .LEXUNIT,
+.ldoceEntry .LEXVAR {
+  font-weight: bold;
 }
-.ref-2 .blog-text .Sense .sensenum {
-  display: inline;
+
+.ldoceEntry .LINKWORD {
+  color: var(--color-secondary);
 }
-.ref-2 .blog-text .Sense .SIGNPOST {
-  display: inline-flex;
-  align-items: center;
-  margin-left: 0.3rem;
-  font-style: italic;
-  font-weight: 600;
-  color: #178286;
-  background-color: #b2becd;
-  border-radius: 10px;
-  padding: 0 0.3rem;
-}
-.ref-2 .blog-text .Sense .REGISTERLAB {
-  display: inline-flex;
-  align-items: center;
-  margin-left: 0.3rem;
-  font-style: italic;
-  font-weight: 600;
-  color: #178286;
-  background-color: #b2becd;
-  border-radius: 10px;
-  padding: 0 0.3rem;
-}
-.ref-2 .blog-text .Sense .ACTIV {
+
+.ldoceEntry .NOTE,
+.ldoceEntry .Noteprompt {
   display: none;
 }
-.ref-2 .blog-text .Sense img {
-  max-width: 10rem;
+
+.ldoceEntry .OBJECT {
+  font-weight: normal;
 }
-.ref-2 .blog-text .Sense .GRAM {
-  display: inline-flex;
-  margin-left: 1rem;
+
+.ldoceEntry .OPP,
+.ldoceEntry .ORTHVAR,
+.ldoceEntry .PASTPART,
+.ldoceEntry .PASTTENSE {
+  font-weight: bold;
 }
-.ref-2 .blog-text .Sense .Subsense .DEF {
-  display: inline;
-}
-.ref-2 .blog-text .Sense .Subsense .GEO {
-  display: none;
-}
-.ref-2 .blog-text .Sense .FIELD {
-  display: none;
-}
-.ref-2 .blog-text .Sense .DEF {
-  display: inline;
-  font-size: 1.3rem;
-}
-.ref-2 .blog-text .Sense .DEF a,
-.ref-2 .blog-text .Sense .DEF span {
-  display: inline;
-}
-.ref-2 .blog-text .Sense .DEF .SUFFIX {
-  margin-left: -0.4rem;
-}
-.ref-2 .blog-text .Sense .GramExa .PROPFORM {
-  font-size: 1.3rem;
-}
-.ref-2 .blog-text .Sense .EXAMPLE {
-  display: inline-block;
-  padding: 0 0.3rem;
-  margin: 0 0.3rem;
-  color: #b2becd;
-  border-bottom: 1.5px #178286 solid;
-}
-.ref-2 .blog-text .Sense .EXAMPLE .Play {
-  display: none;
-}
-.ref-2 .blog-text .Sense .EXAMPLE .GLOSS {
-  display: inline;
-}
-.ref-2 .blog-text .Sense .EXAMPLE .GLOSS span {
-  display: inline;
-}
-.ref-2 .blog-text .Sense .Crossref {
-  display: inline-flex;
-}
-.ref-2 .blog-text .Sense .Crossref .crossRef {
-  display: flex;
-  align-items: center;
-  padding: 0 0.3rem;
-}
-.ref-2 .blog-text .Sense .Thesref {
-  display: none;
-}
-.ref-2 .blog-text .Tail {
-  line-height: 2rem;
-}
-.ref-2 .blog-text .Tail .RunOn {
-  display: flex;
-  align-items: center;
-}
-.ref-2 .blog-text .Tail .RunOn .DERIV {
-  font-size: 1.4rem;
-  font-weight: 500;
-}
-.ref-2 .blog-text .Tail .RunOn .POS {
-  font-size: 1.2rem;
-  font-weight: 400;
-}
-.ref-2 .blog-text .Tail .RunOn span {
-  margin-left: 0.2rem;
-  margin-right: 0.2rem;
-}
-.ref-2 .blog-text .Tail .Crossref span {
-  display: inline;
-}
-.ref-2 .blog-text .Tail .Crossref .REFHWD {
-  margin-left: 0.3rem;
-}
-.ref-2 .blog-text .Tail .Crossref .crossRef {
-  display: inline-flex;
-}
-.ref-2 .blog-text .Tail .Crossref .REFHOMNUM,
-.ref-2 .blog-text .Tail .Crossref .REFSENSENUM {
-  display: none;
-}
-.ref-2 .blog-text .Tail .ColloBox {
-  border: #178286 1px solid;
-  border-radius: 5px;
-  padding: 1rem;
-  margin-top: 1rem;
-}
-.ref-2 .blog-text .Tail .ColloBox .heading {
-  font-size: 1.4rem;
-  font-weight: 700;
-  padding: 0 0.4rem;
-  display: inline;
-  border-bottom: 3px #178286 solid;
-}
-.ref-2 .blog-text .Tail .ColloBox .HEADING {
-  display: none;
-}
-.ref-2 .blog-text .Tail .ColloBox .Section {
-  margin-top: 1rem;
-}
-.ref-2 .blog-text .Tail .ColloBox .Section .SECHEADING {
-  display: inline;
-  padding: 0.3rem;
-  background-color: #178286;
-  border-radius: 5px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  margin-bottom: 0.5rem;
-}
-.ref-2 .blog-text .Tail .ColloBox .Collocate .COLLOC {
-  display: inline-flex;
-  align-items: center;
-}
-.ref-2 .blog-text .Tail .ColloBox .Collocate .COLLGLOSS a,
-.ref-2 .blog-text .Tail .ColloBox .Collocate .COLLGLOSS span {
-  display: inline;
-}
-.ref-2 .blog-text .Tail .ColloBox .Collocate .EXAMPLE {
-  display: inline-flex;
-  align-items: center;
-  color: #b2becd;
-  border-bottom: 1.5px #178286 solid;
-  margin-left: 0.5rem;
-  padding: 0 0.3rem;
-}
-.ref-2 .blog-text .Tail .ColloBox .Collocate .GEO {
-  display: inline-flex;
-  align-items: center;
-  margin: 0 0.5rem;
-  font-weight: 300;
-  color: #178286;
-}
-.ref-2 .blog-text .Tail .ColloBox .Collocate .Variant a,
-.ref-2 .blog-text .Tail .ColloBox .Collocate .Variant span {
-  display: inline;
-}
-.ref-2 .blog-text .Tail .ThesBox {
-  line-height: 2rem;
-  border: #178286 1px solid;
-  border-radius: 5px;
-  padding: 1rem;
-  margin-top: 1rem;
-}
-.ref-2 .blog-text .Tail .ThesBox .heading {
-  font-size: 1.4rem;
-  font-weight: 700;
-  padding: 0 0.4rem;
-  display: inline;
-  border-bottom: 3px #178286 solid;
-}
-.ref-2 .blog-text .Tail .ThesBox .Section .Exponent {
-  margin: 0.5rem auto;
-}
-.ref-2 .blog-text .Tail .ThesBox .Section .Exponent span {
-  display: inline-flex;
-}
-.ref-2 .blog-text .Tail .ThesBox .Section .Exponent .EXP {
-  font-size: 1.2rem;
-  font-weight: 500;
-  padding: 0 0.3rem;
-  margin-right: 0.5rem;
-  background-color: #178286;
-  border-radius: 5px;
-}
-.ref-2 .blog-text .Tail .ThesBox .Section .Exponent .DEF {
+
+.ldoceEntry .PhrVbEntry {
   display: block;
 }
-.ref-2 .blog-text .Tail .ThesBox .Section .Exponent .EXAMPLE {
-  display: inline-flex;
-  color: #b2becd;
-  border-bottom: 1.5px #178286 solid;
-  margin-left: 0.5rem;
-  padding: 0 0.3rem;
+
+.ldoceEntry .PIC,
+.ldoceEntry .PICCAL {
+  display: none;
+}
+
+.ldoceEntry .PLURALFORM {
+  font-weight: bold;
+}
+
+.ldoceEntry .POS,
+.bussdictEntry .POS {
+  color: var(--color-secondary);
+  font-weight: bold;
+  margin: 0 0 0 10px;
+}
+
+.ldoceEntry .PRESPART,
+.ldoceEntry .PRESPARTX {
+  font-weight: bold;
+}
+
+.ldoceEntry .PROPFORM {
+  font-weight: bold;
+  margin-left: 20px;
+}
+
+.ldoceEntry .PROPFORMPREP {
+  font-weight: bold;
+  margin-left: 20px;
+}
+
+.ldoceEntry .PTandPP,
+.ldoceEntry .PTandPPX {
+  font-weight: bold;
+}
+
+.ldoceEntry .REFHOMNUM {
+  vertical-align: super;
+  font-size: 60%;
+}
+
+.ldoceEntry .REFHWD {
+  font-weight: bold;
+  font-style: normal;
+}
+
+.ldoceEntry .REFLEX {
+  font-weight: bold;
+}
+
+.ldoceEntry .REGISTERLAB {
+  color: var(--color-secondary);
+  font-style: italic;
+}
+
+.ldoceEntry .RELATEDWD {
+  font-weight: bold;
+  color: var(--color-secondary);
+}
+
+.ldoceEntry .RunOn {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.ldoceEntry .Sense {
+  display: block;
+  margin-left: 20px;
+  margin-top: 2rem;
+  margin-bottom: 15px;
+}
+
+.ldoceEntry .SIGNPOST {
+  background-color: var(--color-secondary);
+  color: white;
+  font-weight: bold;
+  font-size: 79%;
+  text-transform: uppercase;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  /* padding-left: 3px; */
+  /* padding-right: 3px; */
+  padding: 0px 5px;
+  letter-spacing: 1px;
+}
+
+.ldoceEntry .STRONG {
+  font-style: italic;
+}
+
+.ldoceEntry .Subsense {
+  display: block;
+  margin-left: 10px;
+}
+
+.ldoceEntry .SUPERL,
+.ldoceEntry .SYN,
+.ldoceEntry .T3PERSSING,
+.ldoceEntry .T3PERSSINGX {
+  font-weight: bold;
+}
+
+.ldoceEntry .UNCLASSIFIED {
+  font-weight: bold;
+}
+
+.ldoceEntry .USAGE {
+  display: none;
+}
+
+.ldoceEntry .GramBox .CROSS .neutral {
+  color: var(--color-secondary);
+  margin-right: 10px;
+}
+
+.ldoceEntry .neutral {
+  margin-right: 0.5rem;
+  color: var(--color-white);
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+}
+
+.ldoceEntry .EXPL .cross,
+.ldoceEntry .GramBox .EXPL .dont_say,
+.ldoceEntry .BADEXA {
+  color: var(--color-secondary);
+}
+
+.ldoceEntry .italic {
+  font-style: italic;
+  font-weight: normal;
+}
+
+.ldoceEntry .infllab {
+  font-style: italic;
+  font-weight: normal;
+}
+
+.ldoceEntry .warning {
+  font-style: normal;
+  font-weight: bold;
+  color: var(--color-secondary);
+}
+
+.ldoceEntry .sensenum {
+  font-style: normal;
+  font-weight: bold;
+}
+
+.ldoceEntry .synopp,
+.ldoceEntry .AC {
+  display: inline-block;
+  font-style: normal;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border: solid 1px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.bussdictEntry .Box,
+.ldoceEntry .ColloBox,
+.ldoceEntry .ThesBox,
+.ldoceEntry .F2NBox,
+.ldoceEntry .GramBox {
+  display: block;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border: solid var(--color-secondary) 1px;
+  padding: 15px;
+  margin: 8px 0;
+}
+
+.GramBox {
+  border: var(--color-secondary) 1px solid;
+  border-radius: 5px;
+}
+
+.GramBox .boxheader {
+  line-height: 2em;
+}
+
+.ColloBox .heading {
+  line-height: 2em;
+  margin: 0 10px 0 0;
+}
+
+.ThesBox .heading {
+  line-height: 2em;
+}
+
+.ldoceEntry .HEADING,
+.ldoceEntry .heading {
+  font-weight: bold;
+  font-size: 120%;
+  color: var(--color-secondary);
+}
+
+.ldoceEntry .HEADING.newline {
+  display: block;
+}
+
+.ldoceEntry .SECHEADING,
+.ldoceEntry .subheading {
+  display: block;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border: solid var(--color-secondary) 2px;
+  padding-left: 4px;
+  padding-right: 20px;
+  margin: 0.8rem 0 0.8rem 0;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+  background-color: var(--color-secondary);
+}
+
+.ldoceEntry .SECHEADING {
+  text-align: center;
+}
+
+.ldoceEntry .Collocate,
+.ldoceEntry .Exponent {
+  display: block;
+  margin: 15px 0 0 6px;
+}
+
+.ldoceEntry .EXPL {
+  display: block;
+}
+
+.ldoceEntry .COLLOC,
+.ldoceEntry .EXP,
+.ldoceEntry .EXPR {
+  font-weight: bold;
+}
+
+.ldoceEntry .keycollo {
+  font-weight: bold;
+  color: var(--color-secondary);
+}
+
+.ldoceEntry .THESPROPFORM {
+  font-weight: bold;
+}
+
+.ldoceEntry .COLLEXA,
+.ldoceEntry .THESEXA {
+  color: var(--color-grey-4);
+  display: block;
+}
+
+.ldoceEntry .LearnerItem {
+  display: block;
+}
+
+.ldoceEntry .GOODCOLLO {
+  font-style: italic;
+}
+
+.ldoceEntry .BADCOLLO {
+  text-decoration: line-through;
+}
+
+.ldoceEntry .DEFBOLD {
+  font-weight: bold;
+}
+
+.ldoceEntry .exafile {
+  color: var(--color-grey-4);
+  font-style: normal;
+  font-size: 120%;
+  padding: 5px;
+}
+
+.ldoceEntry .amefile {
+  color: var(--color-secondary);
+  font-size: 130%;
+  padding-left: 5px;
+}
+
+.ldoceEntry .brefile {
+  color: var(--color-secondary);
+  font-size: 130%;
+  padding-left: 5px;
 }/*# sourceMappingURL=longman.css.map */

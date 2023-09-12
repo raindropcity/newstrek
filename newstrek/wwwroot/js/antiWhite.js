@@ -141,54 +141,13 @@ function performLookup(vocabulary) {
                 if (content) {
                     const saveBtn = `
                                     <div class="save-vocabulary-btn-area">
-                                        <button class="save-vocabulary-btn">Save Vocabulary</button>
+                                        <button class="save-vocabulary-btn" data-word="${vocabulary}">Save Vocabulary</button>
                                     </div>
                                 `
                     defCard_1.innerHTML = saveBtn + content
-
-                    return content
                 }
                 else if (!content) defCard_1.innerHTML = `\"${vocabulary}\" is not included in Merriam Webster Dictionary.`
             })
-                .then((content) => {
-                    if (content) {
-                        // save vocabulary
-                        // Add the event listener
-                        defCard_1.addEventListener('click', handleSaveVocabularyClick);
-
-                        function handleSaveVocabularyClick(event) {
-                            if (event.target === document.querySelector(".save-vocabulary-btn")) {
-                                fetch(`/Dictionary/save-vocabulary?word=${vocabulary}`, {
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                        "Authorization": `Bearer ${token}`
-                                    }
-                                })
-                                    .then(response => {
-                                        if (response.status === 401) {
-                                            alert("Your sign in status has expired. Please sign in again.")
-                                            window.location.assign("/newstrek/sign-in.html")
-                                        }
-                                        else if (response.status === 403) {
-                                            alert("Your identity authentication token is not valid. Please contact the developer, thanks!")
-                                            window.location.assign("/newstrek/sign-in.html")
-                                        }
-                                        return response.json()
-                                    })
-                                    .then(data => {
-                                        console.log(data);
-                                        alert(data.response)
-                                        // Remove the event listener after a successful POST request
-                                        defCard_1.removeEventListener('click', handleSaveVocabularyClick);
-                                    })
-                                    .catch(error => {
-                                        console.error('Error in POST request to save vocabulary', error);
-                                    });
-                            }
-                        }
-                    }
-                })
         })
         .catch(error => {
             console.error('Error in GET request to crwal vocabulary in Merriam Webster', error);
@@ -208,6 +167,41 @@ function performLookup(vocabulary) {
     defModal.classList.remove('hidden')
     defModal.classList.add('show-up')
 }
+
+// save vocabulary
+// Add the event listener
+const defCard_1 = document.querySelector(".ref-1 .blog-text")
+defCard_1.addEventListener('click', (event) => {
+    if (event.target === document.querySelector(".save-vocabulary-btn")) {
+        const vocabulary = document.querySelector(".save-vocabulary-btn").getAttribute("data-word")
+
+        fetch(`/Dictionary/save-vocabulary?word=${vocabulary}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${window.localStorage.getItem('JWT_token') }`
+            }
+        })
+            .then(response => {
+                if (response.status === 401) {
+                    alert("Your sign in status has expired. Please sign in again.")
+                    window.location.assign("/newstrek/sign-in.html")
+                }
+                else if (response.status === 403) {
+                    alert("Your identity authentication token is not valid. Please contact the developer, thanks!")
+                    window.location.assign("/newstrek/sign-in.html")
+                }
+                return response.json()
+            })
+            .then(data => {
+                console.log(data)
+                alert(data.response)
+            })
+            .catch(error => {
+                console.error('Error in POST request to save vocabulary', error)
+            })
+    }
+})
 
 // 換字典
 const leftArrow = document.querySelector('.left-arrow')

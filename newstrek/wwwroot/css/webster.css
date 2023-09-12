@@ -1,3 +1,7 @@
+img {
+  display: none;
+}
+
 .entry-header-content {
   display: flex;
   align-items: center;
@@ -14,6 +18,10 @@
 }
 .entry-header-content .parts-of-speech a {
   cursor: default;
+}
+
+.header-ins .col {
+  display: none;
 }
 
 .entry-attr {
