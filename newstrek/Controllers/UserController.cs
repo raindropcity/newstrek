@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Reflection;
+using newstrek.Services;
 
 namespace newstrek.Controllers
 {
@@ -50,11 +51,13 @@ namespace newstrek.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly NewsTrekDbContext _newsTrekDbContext;
+        private readonly JwtParseService _jwtParseService;
 
-        public UserController(IConfiguration configuration, NewsTrekDbContext newsTrekDbContext)
+        public UserController(IConfiguration configuration, NewsTrekDbContext newsTrekDbContext, JwtParseService jwtParseService)
         {
             _configuration = configuration;
             _newsTrekDbContext = newsTrekDbContext;
+            _jwtParseService = jwtParseService;
         }
 
         [AllowAnonymous]
@@ -192,10 +195,8 @@ namespace newstrek.Controllers
         {
             try
             {
-                var userIdentity = HttpContext.User.Identity as ClaimsIdentity;
-                var email = userIdentity.FindFirst(ClaimTypes.Email)?.Value;
-                var userId = userIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var name = userIdentity.FindFirst("name")?.Value;
+                var email = _jwtParseService.ParseEmail();
+                var name = _jwtParseService.ParseUsername();
 
                 var savedVocabulary = await _newsTrekDbContext.Users
                                         .Where(u => u.Email == email)
@@ -238,8 +239,7 @@ namespace newstrek.Controllers
         [HttpPut("modify-interested-topic")]
         public async Task<IActionResult> ModifyInterestedTopic([FromBody] InterestedTopicDto selectedTopic)
         {
-            var userIdentity = HttpContext.User.Identity as ClaimsIdentity;
-            var email = userIdentity.FindFirst(ClaimTypes.Email)?.Value;
+            var email = _jwtParseService.ParseEmail();
 
             var specificUserInterestedTopic = await _newsTrekDbContext.Users
                 .Where(u => u.Email == email)

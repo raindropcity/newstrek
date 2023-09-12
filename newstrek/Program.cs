@@ -27,6 +27,10 @@ builder.Services.AddHostedService<NewsCrawlerTimerService>();
 
 builder.Services.AddScoped<VocabularyService>();
 
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<JwtParseService>();
+
 builder.Services.AddScoped<IOpenAiService, OpenAiService>();
 
 builder.Services.AddElasticSearch(builder.Configuration);

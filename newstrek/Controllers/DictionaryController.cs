@@ -22,13 +22,15 @@ namespace crawler_test.Controllers
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly RedisCacheManager _redisCacheManager;
         private readonly VocabularyService _vocabularyService;
+        private readonly JwtParseService _jwtParseService;
 
-        public DictionaryController (NewsTrekDbContext newsTrekDbContext, IHttpClientFactory httpClientFactory, RedisCacheManager redisCacheManager, VocabularyService vocabularyService)
+        public DictionaryController (NewsTrekDbContext newsTrekDbContext, IHttpClientFactory httpClientFactory, RedisCacheManager redisCacheManager, VocabularyService vocabularyService, JwtParseService jwtParseService)
         {
             _newsTrekDbContext = newsTrekDbContext;
             _httpClientFactory = httpClientFactory;
             _redisCacheManager = redisCacheManager;
             _vocabularyService = vocabularyService;
+            _jwtParseService = jwtParseService;
         }
 
         // 爬蟲英文辭典網頁HTML結構
@@ -126,32 +128,24 @@ namespace crawler_test.Controllers
         [HttpPost("save-vocabulary")]
         public async Task<IActionResult> SaveVocabulary([FromQuery] string? word)
         {
-            string authorizationHeader = HttpContext.Request.Headers["Authorization"];
-            if (authorizationHeader != null && authorizationHeader.StartsWith("Bearer "))
+            var userId = _jwtParseService.ParseUserId();
+
+            if (userId == 0)
             {
-                // extracts the JWT token from the header by removing the first 7 characters ("Bearer ")
-                string jwtToken = authorizationHeader.Substring(7);
-
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var jwtTokenObject = tokenHandler.ReadJwtToken(jwtToken);
-
-                // Extract the user id involved in JWT
-                var userIdClaim = jwtTokenObject.Claims.Where(c => c.Type.Contains("nameidentifier")).Select(s => s.Value).ToList();
-                Console.WriteLine(userIdClaim);
-                bool vocabularyIsExist = await _newsTrekDbContext.Vocabularies.AnyAsync(v => v.Word == word && v.UserId == long.Parse(userIdClaim[0]));
-
-                if (!vocabularyIsExist)
-                {
-                    await _newsTrekDbContext.Vocabularies.AddAsync(new Vocabulary { Word = word, UserId = long.Parse(userIdClaim[0]) });
-                    await _newsTrekDbContext.SaveChangesAsync();
-
-                    return Ok(new { response = $"Vocabulary \"{word}\" saved" });
-                }
-
-                return Ok(new { response = $"Vocabulary \"{word}\" is already saved in database" });
+                return BadRequest("userId claim is missing or invalid");
             }
 
-            return BadRequest("userId claim is missing or invalid");
+            bool vocabularyIsExist = await _newsTrekDbContext.Vocabularies.AnyAsync(v => v.Word == word && v.UserId == userId);
+
+            if (!vocabularyIsExist)
+            {
+                await _newsTrekDbContext.Vocabularies.AddAsync(new Vocabulary { Word = word, UserId = userId });
+                await _newsTrekDbContext.SaveChangesAsync();
+
+                return Ok(new { response = $"Vocabulary \"{word}\" saved" });
+            }
+
+            return Ok(new { response = $"Vocabulary \"{word}\" is already saved in database" });
         }
 
         [HttpDelete("delete-saved-vocabulary")]
@@ -159,8 +153,7 @@ namespace crawler_test.Controllers
         {
             try
             {
-                var userIdentity = HttpContext.User.Identity as ClaimsIdentity;
-                var email = userIdentity.FindFirst(ClaimTypes.Email)?.Value;
+                var email = _jwtParseService.ParseEmail();
 
                 var vocabularyToDelete = await _newsTrekDbContext.Users
                     .Where(u => u.Email == email)

@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Text.Json;
 using System.Security.Claims;
+using newstrek.Services;
 
 namespace newstrek.Controllers
 {
@@ -17,10 +18,12 @@ namespace newstrek.Controllers
     {
         private readonly NewsTrekDbContext _newsTrekDbContext;
         private readonly IElasticClient _elasticClient;
-        public ElasticSearchController(IElasticClient elasticClient, NewsTrekDbContext newsTrekDbContext)
+        private readonly JwtParseService _jwtParseService;
+        public ElasticSearchController(IElasticClient elasticClient, NewsTrekDbContext newsTrekDbContext, JwtParseService jwtParseService)
         {
             _elasticClient = elasticClient;
             _newsTrekDbContext = newsTrekDbContext;
+            _jwtParseService = jwtParseService;
         }
 
         [Authorize]
@@ -124,44 +127,37 @@ namespace newstrek.Controllers
         [HttpGet("recommend-news")]
         public async Task<IActionResult> RecommendNews()
         {
-            string authorizationHeader = HttpContext.Request.Headers["Authorization"];
-            if (authorizationHeader != null && authorizationHeader.StartsWith("Bearer "))
+            var email = _jwtParseService.ParseEmail();
+
+            if (email == "Email claim is missing or invalid")
             {
-                var userIdentity = HttpContext.User.Identity as ClaimsIdentity;
-                var emailClaim = userIdentity.FindFirst(ClaimTypes.Email)?.Value;
-
-                if (emailClaim != null)
-                {
-                    // Use the extracted Email to query the specific user's InterestedTopic
-                    var userInterestedTopic = await _newsTrekDbContext.Users.Where(u => u.Email == emailClaim).Select(s => s.InterestedTopic).ToListAsync();
-
-                    // Try to iterate the object(must use System.Reflection)
-                    Type objectType = typeof(InterestedTopic);
-                    PropertyInfo[] properties = objectType.GetProperties();
-                    List<string> selectedInterestedTopic = new List<string>();
-
-                    foreach (PropertyInfo property in properties)
-                    {
-                        string propertyName = property.Name;
-                        object propertyValue = property.GetValue(userInterestedTopic[0]);
-
-                        // Check if propertyValue is a boolean and true
-                        if (propertyValue is bool && (bool)propertyValue)
-                        {
-                            // If the value is true, add its key into the List selectedInterestedTopic
-                            selectedInterestedTopic.Add(propertyName);
-                        }
-                    }
-
-                    var recommendedNews = await QueryRecommendedNews(selectedInterestedTopic);
-
-                    return Ok(recommendedNews);
-                }
-
                 return BadRequest("Email claim is missing or invalid");
             }
 
-            return BadRequest("Error in Authorization of request header");
+            // Use the extracted Email to query the specific user's InterestedTopic
+            var userInterestedTopic = await _newsTrekDbContext.Users.Where(u => u.Email == email).Select(s => s.InterestedTopic).ToListAsync();
+
+            // Try to iterate the object(must use System.Reflection)
+            Type objectType = typeof(InterestedTopic);
+            PropertyInfo[] properties = objectType.GetProperties();
+            List<string> selectedInterestedTopic = new List<string>();
+
+            foreach (PropertyInfo property in properties)
+            {
+                string propertyName = property.Name;
+                object propertyValue = property.GetValue(userInterestedTopic[0]);
+
+                // Check if propertyValue is a boolean and true
+                if (propertyValue is bool && (bool)propertyValue)
+                {
+                    // If the value is true, add its key into the List selectedInterestedTopic
+                    selectedInterestedTopic.Add(propertyName);
+                }
+            }
+
+            var recommendedNews = await QueryRecommendedNews(selectedInterestedTopic);
+
+            return Ok(recommendedNews);
         }
 
         private async Task<List<News>> QueryRecommendedNews(List<string> selectedInterestedTopic)
