@@ -195,7 +195,7 @@ namespace crawler_test.Controllers
 
                 var vocabularyToDelete = await _newsTrekDbContext.Users
                     .Where(u => u.Email == email)
-                    .SelectMany(u => u.Vacabularies)
+                    .SelectMany(u => u.Vocabularies)
                     .Where(v => v.Word == word)
                     .FirstOrDefaultAsync();
 

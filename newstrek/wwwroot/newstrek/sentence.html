@@ -103,15 +103,23 @@
                 word_1.value = ""
                 word_2.value = ""
                 word_3.value = ""
+                word_1.style.border = 'none'
+                word_2.style.border = 'none'
+                word_3.style.border = 'none'
             })
 
             submitBtn.addEventListener('click', (event) => {
                 event.preventDefault()
 
                 const token = window.localStorage.getItem('JWT_token')
+                const headers = {
+                    Authorization: `Bearer ${token}`
+                }
 
                 const userInputedWords = document.querySelectorAll(".word")
                 const inputData = []
+
+                let nextStepOrNot = true
 
                 if (word_1.value.trim() != '' || word_2.value.trim() != '' || word_3.value.trim() != '') {
                     makeSentence()
@@ -124,7 +132,7 @@
 
                     for (const word of userInputedWords) {
                         if (word.value) {
-                            const fetchPromise = fetch(`/Dictionary/look-up-words?word=${word.value}`, { headers: { Authorization: `Bearer ${token}` } })
+                            const fetchPromise = fetch(`/Dictionary/look-up-words?word=${word.value}`, { headers })
                                 .then(response => {
                                     if (response.status === 401) {
                                         alert("Your sign in status has expired. Please sign in again.")
@@ -157,20 +165,24 @@
 
                     const results = await Promise.all(fetchPromises)
                     console.log(results)
-                    let nextStepOrNot = true
 
                     results.forEach((data, index) => {
-                        if (data && data.length > 0 && data[0].meta) {
+                        if (userInputedWords[index].value.trim().length > 0 && (Number(userInputedWords[index].value))) {
+                            userInputedWords[index].style.border = 'red 2px solid'
+                            userInputedWords[index].value = `${userInputedWords[index].value} (please provide a vocabulary)`
+                            nextStepOrNot = false
+                        } else if (userInputedWords[index].value.trim().length > 0 && userInputedWords[index].value.trim().length === 1) {
+                            userInputedWords[index].style.border = 'red 2px solid'
+                            userInputedWords[index].value = `${userInputedWords[index].value} (please provide a vocabulary with length > 1)`
+                            nextStepOrNot = false
+                        } else if (data && data.length > 0 && data[0].meta) {
                             inputData.push(userInputedWords[index].value)
-                        } else if (data) {
+                        } else if (userInputedWords[index].value.trim().length > 0) {
                             userInputedWords[index].style.border = 'red 2px solid'
                             userInputedWords[index].value = `${userInputedWords[index].value} (check your spelling)`
                             nextStepOrNot = false
                         }
                     })
-
-                    console.log(inputData)
-                    console.log(nextStepOrNot)
 
                     if (nextStepOrNot) {
                         console.log("ready to fire request to OpenAI")
@@ -215,10 +227,24 @@
 
             function focusHandler(e) {
                 console.log("focusHandler fired")
-                console.log(e.target)
+                
                 e.target.style.border = 'none'
-                e.target.value = `${e.target.value.replace(" (check your spelling)", "")}`
-                e.target.parentElement.parentElement.removeEventListener('focusin', focusHandler)
+                if (e.target.value.includes(" (please provide a vocabulary)")) {
+                    e.target.value = `${e.target.value.replace(" (please provide a vocabulary)", "")}`
+                } else if (e.target.value.includes(" (please provide a vocabulary with length > 1)")) {
+                    e.target.value = `${e.target.value.replace(" (please provide a vocabulary with length > 1)", "")}`
+                } else if (e.target.value.includes(" (check your spelling)")) {
+                    e.target.value = `${e.target.value.replace(" (check your spelling)", "")}`
+                }
+                const userInputedWords = document.querySelectorAll(".word")
+                const checkProblem = []
+                userInputedWords.forEach(item => {
+                    if (!item.value.includes("(please provide a vocabulary)") && !item.value.includes("(please provide a vocabulary with length > 1)") && !item.value.includes("(check your spelling)")) {
+                        checkProblem.push(true)
+                    } else checkProblem.push(false)
+                })
+                
+                if (!checkProblem.some(item => item === false)) e.target.parentElement.parentElement.removeEventListener('focusin', focusHandler)
             }
         })
     </script>

@@ -12,7 +12,7 @@ namespace newstrek.Models
         public string Name { get; set; }
         [JsonIgnore]
         public InterestedTopic InterestedTopic { get; set; }
-        public List<Vocabulary>? Vacabularies { get; set; }
+        public List<Vocabulary>? Vocabularies { get; set; }
         public string? AccessToken { get; set; }
         public long AccessExpired { get; set; }
         public DateTime? LoginAt { get; set; }
