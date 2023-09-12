@@ -98,6 +98,14 @@ namespace crawler_test.Controllers
 
                 return Ok(result);
             }
+            catch (SecurityTokenExpiredException)
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized, "The authentication token has expired.");
+            }
+            catch (SecurityTokenValidationException)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "The authentication token is invalid.");
+            }
             catch (Exception ex)
             {
                 // Handle exceptions
@@ -118,6 +126,14 @@ namespace crawler_test.Controllers
                 }
 
                 return Ok(new { response = $"Vocabulary \"{word}\" is already saved in database" });
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized, "The authentication token has expired.");
+            }
+            catch (SecurityTokenValidationException)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "The authentication token is invalid.");
             }
             catch (Exception e)
             {
@@ -140,6 +156,14 @@ namespace crawler_test.Controllers
                 {
                     return BadRequest(new { Result = $"Vocabulary \"{word}\" not found" });
                 }
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized, "The authentication token has expired.");
+            }
+            catch (SecurityTokenValidationException)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "The authentication token is invalid.");
             }
             catch (Exception ex)
             {
