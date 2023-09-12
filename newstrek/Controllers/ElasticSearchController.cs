@@ -12,7 +12,7 @@ using System.Security.Claims;
 namespace newstrek.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ElasticSearchController : ControllerBase
     {
         private readonly NewsTrekDbContext _newsTrekDbContext;
@@ -24,7 +24,7 @@ namespace newstrek.Controllers
         }
 
         [Authorize]
-        [HttpGet("SearchNews")] // 要分查詢權重
+        [HttpGet("search-news")] // 要分查詢權重
         public async Task<IActionResult> SearchNews(string keyword)
         {
             var results = await _elasticClient.SearchAsync<News>(

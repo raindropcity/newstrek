@@ -276,7 +276,7 @@
             }
 
             function deleteWord(vocabulary, token) {
-                fetch(`/Dictionary/delete-saved-vocabulary?word=${vocabulary}`, {
+                fetch(`/api/Dictionary/delete-saved-vocabulary?word=${vocabulary}`, {
                     method: "DELETE",
                     headers: {
                         "Authorization": `Bearer ${token}`
@@ -315,7 +315,7 @@
                     defModal.classList.add('hidden')
                 })
 
-                fetch(`/Dictionary/look-up-words-crawler-Merriam-Webster?word=${vocabulary}`, { headers })
+                fetch(`/api/Dictionary/look-up-words-crawler-Merriam-Webster?word=${vocabulary}`, { headers })
                     .then(response => {
                         if (response.status === 401) {
                             alert("Your sign in status has expired. Please sign in again.")
@@ -337,7 +337,7 @@
                         console.error('Error in GET request to crwal vocabulary in Merriam Webster', error);
                     })
 
-                fetch(`/Dictionary/look-up-words-crawler-Longman?word=${vocabulary}`, { headers })
+                fetch(`/api/Dictionary/look-up-words-crawler-Longman?word=${vocabulary}`, { headers })
                     .then(data => {
                         data.text().then((content) => {
                             if (content) defCard_2.innerHTML = content

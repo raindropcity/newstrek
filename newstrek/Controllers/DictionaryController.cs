@@ -15,7 +15,7 @@ namespace crawler_test.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class DictionaryController : ControllerBase
     {
         private readonly NewsTrekDbContext _newsTrekDbContext;

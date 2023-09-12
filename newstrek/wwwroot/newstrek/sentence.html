@@ -132,7 +132,7 @@
 
                     for (const word of userInputedWords) {
                         if (word.value) {
-                            const fetchPromise = fetch(`/Dictionary/look-up-words?word=${word.value}`, { headers })
+                            const fetchPromise = fetch(`/api/Dictionary/look-up-words?word=${word.value}`, { headers })
                                 .then(response => {
                                     if (response.status === 401) {
                                         alert("Your sign in status has expired. Please sign in again.")
