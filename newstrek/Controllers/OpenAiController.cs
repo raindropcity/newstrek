@@ -19,7 +19,7 @@ namespace crawler_test.Controllers
             _openAiService = openAiService;
         }
 
-        [HttpPost("CompleteSentence")]
+        [HttpPost("complete-sentence")]
         public async Task<IActionResult> CompleteSentence ([FromBody] HashSet<string> vocabularyList)
         {
             try
