@@ -21,12 +21,14 @@ namespace crawler_test.Controllers
         private readonly NewsTrekDbContext _newsTrekDbContext;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly RedisCacheManager _redisCacheManager;
+        private readonly VocabularyService _vocabularyService;
 
-        public DictionaryController (NewsTrekDbContext newsTrekDbContext, IHttpClientFactory httpClientFactory, RedisCacheManager redisCacheManager)
+        public DictionaryController (NewsTrekDbContext newsTrekDbContext, IHttpClientFactory httpClientFactory, RedisCacheManager redisCacheManager, VocabularyService vocabularyService)
         {
             _newsTrekDbContext = newsTrekDbContext;
             _httpClientFactory = httpClientFactory;
             _redisCacheManager = redisCacheManager;
+            _vocabularyService = vocabularyService;
         }
 
         // 爬蟲英文辭典網頁HTML結構
@@ -36,25 +38,10 @@ namespace crawler_test.Controllers
             try
             {
                 var cacheKey = $"MerriamWebster_{word}";
-                // Check if the result is cached
-                string? htmlStructure = await _redisCacheManager.GetStringAsync(cacheKey);
+                var address = $"https://www.merriam-webster.com/dictionary/{word}";
+                var className = ".entry-word-section-container";
 
-                if (htmlStructure == null)
-                {
-                    var config = Configuration.Default.WithDefaultLoader();
-                    var address = $"https://www.merriam-webster.com/dictionary/{word}";
-                    var context = BrowsingContext.New(config);
-                    var document = await context.OpenAsync(address);
-
-                    var def = document.QuerySelectorAll(".entry-word-section-container");
-                    htmlStructure = "";
-                    foreach (var item in def)
-                    {
-                        htmlStructure += item.OuterHtml;
-                    }
-                    // Store the result in cache
-                    await _redisCacheManager.SetStringAsync(cacheKey, htmlStructure);
-                }
+                var htmlStructure = await _vocabularyService.VocabularyCrawlerAsync(cacheKey, address, className);
 
                 return Ok(htmlStructure);
             }
@@ -78,25 +65,10 @@ namespace crawler_test.Controllers
             try
             {
                 var cacheKey = $"Longman_{word}";
-                // Check if the result is cached
-                string? htmlStructure = await _redisCacheManager.GetStringAsync(cacheKey);
+                var address = $"https://www.ldoceonline.com/dictionary/{word}";
+                var className = ".ldoceEntry";
 
-                if (htmlStructure == null)
-                {
-                    var config = Configuration.Default.WithDefaultLoader();
-                    var address = $"https://www.ldoceonline.com/dictionary/{word}";
-                    var context = BrowsingContext.New(config);
-                    var document = await context.OpenAsync(address);
-
-                    var def = document.QuerySelectorAll(".ldoceEntry");
-                    htmlStructure = "";
-                    foreach (var item in def)
-                    {
-                        htmlStructure += item.OuterHtml;
-                    }
-                    // Store the result in cache
-                    await _redisCacheManager.SetStringAsync(cacheKey, htmlStructure);
-                }
+                var htmlStructure = await _vocabularyService.VocabularyCrawlerAsync(cacheKey, address, className);
 
                 return Ok(htmlStructure);
             }
@@ -115,11 +87,8 @@ namespace crawler_test.Controllers
         }
 
         /* 串接英文辭典API */
-        // Key for Collegiate® Dictionary with Audio / Collegiate® Thesaurus API
+        // Key for Collegiate® Dictionary with Audio
         string? DictionaryApiKey = Environment.GetEnvironmentVariable("DictionaryApiKey");
-        //string? ThesaurusApiKey = Environment.GetEnvironmentVariable("ThesaurusApiKey");
-
-        //string? wordnikApiKey = Environment.GetEnvironmentVariable("wordnikApiKey");
 
         [HttpGet("look-up-words")]
         public async Task<IActionResult> LookUpWords(string word)

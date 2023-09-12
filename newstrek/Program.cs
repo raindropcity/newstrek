@@ -25,6 +25,8 @@ builder.Services.AddSingleton<NewsCrawlerService>();
 
 builder.Services.AddHostedService<NewsCrawlerTimerService>();
 
+builder.Services.AddScoped<VocabularyService>();
+
 builder.Services.AddScoped<IOpenAiService, OpenAiService>();
 
 builder.Services.AddElasticSearch(builder.Configuration);
