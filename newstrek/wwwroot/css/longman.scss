@@ -1,322 +1,533 @@
-.ref-2 .blog-text {
+:root {
+  --color-primary: #191d2b;
+  --color-secondary: #178286;
+  --color-white: #FFFFFF;
+  --color-black: #000;
+  --color-grey0: #f8f8f8;
+  --color-grey-1: #dbe1e8;
+  --color-grey-2: #b2becd;
+  --color-grey-3: #6c7983;
+  --color-grey-4: #454e56;
+  --color-grey-5: #2a2e35;
+  --color-grey-6: #12181b;
+}
 
-  span {
-    display: block;
-  }
-
-  .topics_container,
-  .HYPHENATION,
-  .PronCodes,
-  .LEVEL,
-  .FREQ,
-  .speaker,
-  script {
-    display: none;
-  }
-
-  .ldoceEntry:has(.newline) {
-    display: none;
-  }
+/*****  LDOCE  ***************************/
+.ldoceEntry {
+  line-height: 1.8rem;
 
   .Head {
-    display: flex;
-    align-items: center;
+    padding-top: .5rem;
+    padding-left: .5rem;
     border-bottom: 3px #178286 solid;
-
-    .HWD {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-right: .5rem;
-    }
-
-    .POS {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-left: .5rem;
-    }
-
-    .GRAM {
-      display: inline-flex;
-      margin-left: 1rem;
-    }
   }
 
-  .Sense {
-    line-height: 2rem;
-    margin-top: .5rem;
-
-    .sensenum {
-      display: inline;
-    }
-
-    .SIGNPOST {
-      display: inline-flex;
-      align-items: center;
-      margin-left: .3rem;
-      font-style: italic;
-      font-weight: 600;
-      color: #178286;
-      background-color: #b2becd;
-      border-radius: 10px;
-      padding: 0 .3rem;
-    }
-
-    .REGISTERLAB {
-      display: inline-flex;
-      align-items: center;
-      margin-left: .3rem;
-      font-style: italic;
-      font-weight: 600;
-      color: #178286;
-      background-color: #b2becd;
-      border-radius: 10px;
-      padding: 0 .3rem;
-    }
-
-    .ACTIV {
-      display: none;
-    }
-
-    img {
-      max-width: 10rem;
-    }
-
-    .GRAM {
-      display: inline-flex;
-      margin-left: 1rem;
-    }
-
-    .Subsense {
-
-      .DEF {
-        display: inline;
-      }
-
-      .GEO {
-        display: none;
-      }
-    }
-
-    .FIELD {
-      display: none;
-    }
-
-    .DEF {
-      display: inline;
-      font-size: 1.3rem;
-
-      a,
-      span {
-        display: inline;
-      }
-
-      .SUFFIX {
-        margin-left: -.4rem;
-      }
-    }
-
-    .GramExa .PROPFORM {
-      font-size: 1.3rem;
-    }
-
-    .EXAMPLE {
-      display: inline-block;
-      padding: 0 .3rem;
-      margin: 0 .3rem;
-      color: #b2becd;
-      border-bottom: 1.5px #178286 solid;
-
-      .Play {
-        display: none;
-      }
-
-      .GLOSS {
-        display: inline;
-
-        span {
-          display: inline;
-        }
-      }
-    }
-
-    .Crossref {
-      display: inline-flex;
-
-      .crossRef {
-        display: flex;
-        align-items: center;
-        padding: 0 .3rem;
-      }
-    }
-
-    .Thesref {
-      display: none;
-    }
+  .speaker,
+  .tooltip,
+  img,
+  .topics_container,
+  .FREQ {
+    display: none;
   }
+}
 
-  .Tail {
-    line-height: 2rem;
+.ldoceEntry .Entry {
+  font-size: 12pt;
+  text-align: justify;
+  display: block;
+  margin-top: 8px;
+}
 
-    .RunOn {
-      display: flex;
-      align-items: center;
+.ldoceEntry .Thesref {
+  color: var(--color-secondary);
+}
 
-      .DERIV {
-        font-size: 1.4rem;
-        font-weight: 500;
-      }
 
-      .POS {
-        font-size: 1.2rem;
-        font-weight: 400;
-      }
+.ldoceEntry .ABBR {
+  font-weight: bold;
+}
 
-      span {
-        margin-left: .2rem;
-        margin-right: .2rem;
-      }
-    }
+.ldoceEntry .ACTIV {
+  display: none;
+}
 
-    .Crossref {
+.ldoceEntry .AMEQUIV {
+  font-weight: bold;
+}
 
-      span {
-        display: inline;
-      }
+.ldoceEntry .BOX {
+  display: none;
+}
 
-      .REFHWD {
-        margin-left: .3rem;
-      }
+.ldoceEntry .BREQUIV {
+  font-weight: bold;
+}
 
-      .crossRef {
-        display: inline-flex;
-      }
+.ldoceEntry .COLLO {
+  font-weight: bold;
+  margin-left: 20px;
+}
 
-      .REFHOMNUM,
-      .REFSENSENUM {
-        display: none;
-      }
-    }
+.ldoceEntry .ColloExa {
+  display: block;
+}
 
-    .ColloBox {
-      border: #178286 1px solid;
-      border-radius: 5px;
-      padding: 1rem;
-      margin-top: 1rem;
+.ldoceEntry .COLLOINEXA {
+  font-weight: bold;
+}
 
-      .heading {
-        font-size: 1.4rem;
-        font-weight: 700;
-        padding: 0 .4rem;
-        display: inline;
-        border-bottom: 3px #178286 solid;
-      }
+.ldoceEntry .COMMENT {
+  display: none;
+}
 
-      .HEADING {
-        display: none;
-      }
+.ldoceEntry .COMP {
+  font-weight: bold;
+}
 
-      .Section {
-        margin-top: 1rem;
+.ldoceEntry .Crossrefto {
+  font-weight: bold;
+  font-size: 120%;
+}
 
-        .SECHEADING {
-          display: inline;
-          padding: .3rem;
-          background-color: #178286;
-          border-radius: 5px;
-          font-weight: 700;
-          letter-spacing: 2px;
-          margin-bottom: .5rem;
-        }
-      }
+.ldoceEntry .DERIV {
+  font-weight: bold;
+  font-size: 120%;
+}
 
-      .Collocate {
+.ldoceEntry .Entry {
+  font-size: 11pt;
+  text-align: justify;
+}
 
-        .COLLOC {
-          display: inline-flex;
-          align-items: center;
-        }
+.ldoceEntry .ErrorBox {
+  display: block;
+}
 
-        .COLLGLOSS {
+.ldoceEntry .EXAMPLE {
+  display: block;
+  margin-left: 1rem;
+  margin-bottom: .8rem;
+  padding-left: .5rem;
+  color: var(--color-white);
+  border-bottom: 1px var(--color-secondary) solid;
+}
 
-          a,
-          span {
-            display: inline;
-          }
-        }
 
-        .EXAMPLE {
-          display: inline-flex;
-          align-items: center;
-          color: #b2becd;
-          border-bottom: 1.5px #178286 solid;
-          margin-left: .5rem;
-          padding: 0 .3rem;
-        }
+.ldoceEntry .FIELD {
+  display: none;
+}
 
-        .GEO {
-          display: inline-flex;
-          align-items: center;
-          margin: 0 .5rem;
-          font-weight: 300;
-          color: #178286;
-        }
+.ldoceEntry .AC,
+.ldoceEntry .synopp {
+  color: #fff;
+  border-color: var(--color-secondary);
+  background-color: var(--color-secondary);
+}
 
-        .Variant {
+.ldoceEntry .FREQ {
+  color: var(--color-secondary);
+  border-color: var(--color-secondary);
+}
 
-          a,
-          span {
-            display: inline;
-          }
-        }
-      }
-    }
+.ldoceEntry .LEVEL {
+  color: var(--color-secondary);
+  font-size: 120%;
+}
 
-    .ThesBox {
-      line-height: 2rem;
-      border: #178286 1px solid;
-      border-radius: 5px;
-      padding: 1rem;
-      margin-top: 1rem;
+.ldoceEntry .FULLFORM {
+  font-weight: bold;
+}
 
-      .heading {
-        font-size: 1.4rem;
-        font-weight: 700;
-        padding: 0 .4rem;
-        display: inline;
-        border-bottom: 3px #178286 solid;
-      }
+.ldoceEntry .GEO,
+.ldoceEntry .geo {
+  font-weight: normal;
+  color: var(--color-secondary);
+}
 
-      .Section {
+.ldoceEntry .GLOSS {
+  color: var(--color-secondary);
+  font-weight: normal;
+  font-style: normal;
+}
 
-        .Exponent {
-          margin: .5rem auto;
+.ldoceEntry .GRAM,
+.bussdictEntry .GRAM {
+  color: var(--color-secondary);
+  font-weight: bold;
+  margin: 0 5px 10px 3px
+}
 
-          span {
-            display: inline-flex;
-          }
+.ldoceEntry .GramExa {
+  display: block;
+}
 
-          .EXP {
-            font-size: 1.2rem;
-            font-weight: 500;
-            padding: 0 .3rem;
-            margin-right: .5rem;
-            background-color: #178286;
-            border-radius: 5px;
-          }
+.ldoceEntry .HINTBOLD {
+  font-weight: bold;
+}
 
-          .DEF {
-            display: block;
-          }
+.ldoceEntry .HINTITALIC {
+  font-style: italic;
+}
 
-          .EXAMPLE {
-            display: inline-flex;
-            color: #b2becd;
-            border-bottom: 1.5px #178286 solid;
-            margin-left: .5rem;
-            padding: 0 .3rem;
-          }
-        }
-      }
-    }
-  }
+.ldoceEntry .HINTTITLE {
+  font-weight: bold;
+}
+
+.ldoceEntry .frequent .HOMNUM {
+  vertical-align: super;
+  font-size: 12pt;
+  color: var(--color-secondary);
+  font-weight: bold;
+  margin-left: .5rem;
+}
+
+// .ldoceEntry .frequent .HYPHENATION {
+//   color: var(--color-secondary);
+//   font-size: 2rem;
+// }
+
+.ldoceEntry .HOMNUM {
+  vertical-align: super;
+  font-size: 12pt;
+  color: var(--color-secondary);
+  font-weight: bold;
+  margin-left: .5rem;
+}
+
+.ldoceEntry .HWD {
+  color: var(--color-secondary);
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.ldoceEntry .HYPHENATION,
+.ldoceEntry .PHRVBHWD {
+  display: none;
+  font-weight: bold;
+  font-size: 160%;
+  color: var(--color-secondary);
+}
+
+.ldoceEntry .LEXUNIT,
+.ldoceEntry .LEXVAR {
+  font-weight: bold;
+}
+
+.ldoceEntry .LINKWORD {
+  color: var(--color-secondary);
+}
+
+.ldoceEntry .NOTE,
+.ldoceEntry .Noteprompt {
+  display: none;
+}
+
+.ldoceEntry .OBJECT {
+  font-weight: normal;
+}
+
+.ldoceEntry .OPP,
+.ldoceEntry .ORTHVAR,
+.ldoceEntry .PASTPART,
+.ldoceEntry .PASTTENSE {
+  font-weight: bold;
+}
+
+.ldoceEntry .PhrVbEntry {
+  display: block;
+}
+
+.ldoceEntry .PIC,
+.ldoceEntry .PICCAL {
+  display: none;
+}
+
+.ldoceEntry .PLURALFORM {
+  font-weight: bold;
+}
+
+.ldoceEntry .POS,
+.bussdictEntry .POS {
+  color: var(--color-secondary);
+  font-weight: bold;
+  margin: 0 0 0 10px
+}
+
+.ldoceEntry .PRESPART,
+.ldoceEntry .PRESPARTX {
+  font-weight: bold;
+}
+
+.ldoceEntry .PROPFORM {
+  font-weight: bold;
+  margin-left: 20px;
+}
+
+.ldoceEntry .PROPFORMPREP {
+  font-weight: bold;
+  margin-left: 20px;
+}
+
+.ldoceEntry .PTandPP,
+.ldoceEntry .PTandPPX {
+  font-weight: bold;
+}
+
+.ldoceEntry .REFHOMNUM {
+  vertical-align: super;
+  font-size: 60%;
+}
+
+.ldoceEntry .REFHWD {
+  font-weight: bold;
+  font-style: normal;
+}
+
+.ldoceEntry .REFLEX {
+  font-weight: bold;
+}
+
+.ldoceEntry .REGISTERLAB {
+  color: var(--color-secondary);
+  font-style: italic;
+}
+
+.ldoceEntry .RELATEDWD {
+  font-weight: bold;
+  color: var(--color-secondary);
+}
+
+.ldoceEntry .RunOn {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.ldoceEntry .Sense {
+  display: block;
+  margin-left: 20px;
+  margin-top: 2rem;
+  margin-bottom: 15px;
+}
+
+.ldoceEntry .SIGNPOST {
+  background-color: var(--color-secondary);
+  color: white;
+  font-weight: bold;
+  font-size: 79%;
+  text-transform: uppercase;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  /* padding-left: 3px; */
+  /* padding-right: 3px; */
+  padding: 0px 5px;
+  letter-spacing: 1px;
+}
+
+.ldoceEntry .STRONG {
+  font-style: italic;
+}
+
+.ldoceEntry .Subsense {
+  display: block;
+  margin-left: 10px;
+}
+
+.ldoceEntry .SUPERL,
+.ldoceEntry .SYN,
+.ldoceEntry .T3PERSSING,
+.ldoceEntry .T3PERSSINGX {
+  font-weight: bold;
+}
+
+.ldoceEntry .UNCLASSIFIED {
+  font-weight: bold;
+}
+
+.ldoceEntry .USAGE {
+  display: none;
+}
+
+.ldoceEntry .GramBox .CROSS .neutral {
+  color: var(--color-secondary);
+  margin-right: 10px;
+}
+
+.ldoceEntry .neutral {
+  margin-right: .5rem;
+  color: var(--color-white);
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+}
+
+.ldoceEntry .EXPL .cross,
+.ldoceEntry .GramBox .EXPL .dont_say,
+.ldoceEntry .BADEXA {
+  color: var(--color-secondary);
+}
+
+.ldoceEntry .italic {
+  font-style: italic;
+  font-weight: normal;
+}
+
+.ldoceEntry .infllab {
+  font-style: italic;
+  font-weight: normal;
+}
+
+.ldoceEntry .warning {
+  font-style: normal;
+  font-weight: bold;
+  color: var(--color-secondary);
+}
+
+.ldoceEntry .sensenum {
+  font-style: normal;
+  font-weight: bold;
+}
+
+.ldoceEntry .synopp,
+.ldoceEntry .AC {
+  display: inline-block;
+  font-style: normal;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border: solid 1px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.bussdictEntry .Box,
+.ldoceEntry .ColloBox,
+.ldoceEntry .ThesBox,
+.ldoceEntry .F2NBox,
+.ldoceEntry .GramBox {
+  display: block;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border: solid var(--color-secondary) 1px;
+  padding: 15px;
+  margin: 8px 0;
+}
+
+.GramBox {
+  border: var(--color-secondary) 1px solid;
+  border-radius: 5px;
+}
+
+.GramBox .boxheader {
+  line-height: 2em
+}
+
+.ColloBox .heading {
+  line-height: 2em;
+  margin: 0 10px 0 0
+}
+
+.ThesBox .heading {
+  line-height: 2em
+}
+
+.ldoceEntry .HEADING,
+.ldoceEntry .heading {
+  font-weight: bold;
+  font-size: 120%;
+  color: var(--color-secondary);
+}
+
+.ldoceEntry .HEADING.newline {
+  display: block;
+}
+
+.ldoceEntry .SECHEADING,
+.ldoceEntry .subheading {
+  display: block;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border: solid var(--color-secondary) 2px;
+  padding-left: 4px;
+  padding-right: 20px;
+  margin: .8rem 0 .8rem 0;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+  background-color: var(--color-secondary);
+}
+
+.ldoceEntry .SECHEADING {
+  text-align: center;
+}
+
+.ldoceEntry .Collocate,
+.ldoceEntry .Exponent {
+  display: block;
+  margin: 15px 0 0 6px;
+}
+
+.ldoceEntry .EXPL {
+  display: block;
+}
+
+.ldoceEntry .COLLOC,
+.ldoceEntry .EXP,
+.ldoceEntry .EXPR {
+  font-weight: bold;
+}
+
+.ldoceEntry .keycollo {
+  font-weight: bold;
+  color: var(--color-secondary);
+}
+
+.ldoceEntry .THESPROPFORM {
+  font-weight: bold;
+}
+
+.ldoceEntry .COLLEXA,
+.ldoceEntry .THESEXA {
+  color: var(--color-grey-4);
+  display: block;
+}
+
+
+.ldoceEntry .LearnerItem {
+  display: block;
+}
+
+.ldoceEntry .GOODCOLLO {
+  font-style: italic;
+}
+
+.ldoceEntry .BADCOLLO {
+  text-decoration: line-through;
+}
+
+.ldoceEntry .DEFBOLD {
+  font-weight: bold;
+}
+
+.ldoceEntry .exafile {
+  color: var(--color-grey-4);
+  font-style: normal;
+  font-size: 120%;
+  padding: 5px;
+}
+
+.ldoceEntry .amefile {
+  color: var(--color-secondary);
+  font-size: 130%;
+  padding-left: 5px;
+}
+
+.ldoceEntry .brefile {
+  color: var(--color-secondary);
+  font-size: 130%;
+  padding-left: 5px;
 }
