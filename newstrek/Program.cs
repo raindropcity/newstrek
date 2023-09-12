@@ -7,6 +7,7 @@ using newstrek.Configurations;
 using newstrek.Services;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
+using newstrek.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

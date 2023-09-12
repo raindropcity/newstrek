@@ -1,4 +1,4 @@
-﻿namespace newstrek.Services
+﻿namespace newstrek.Interfaces
 {
     public interface IOpenAiService
     {

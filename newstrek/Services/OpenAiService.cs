@@ -1,5 +1,6 @@
 ﻿using newstrek.Configurations;
 using Microsoft.Extensions.Options;
+using newstrek.Interfaces;
 
 namespace newstrek.Services
 {
