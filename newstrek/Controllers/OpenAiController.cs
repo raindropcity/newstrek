@@ -1,7 +1,7 @@
-﻿using newstrek.Services;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using newstrek.Interfaces;
 
 namespace crawler_test.Controllers
 {
