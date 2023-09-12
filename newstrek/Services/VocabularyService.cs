@@ -3,6 +3,7 @@ using Azure;
 using Microsoft.EntityFrameworkCore;
 using newstrek.Data;
 using newstrek.Models;
+using System.Net.Http;
 using System.Text.Json;
 
 namespace newstrek.Services
@@ -12,12 +13,14 @@ namespace newstrek.Services
         private readonly NewsTrekDbContext _newsTrekDbContext;
         private readonly RedisCacheManager _redisCacheManager;
         private readonly JwtParseService _jwtParseService;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public VocabularyService (NewsTrekDbContext newsTrekDbContext, RedisCacheManager redisCacheManager, JwtParseService jwtParseService)
+        public VocabularyService (NewsTrekDbContext newsTrekDbContext, RedisCacheManager redisCacheManager, JwtParseService jwtParseService, IHttpClientFactory httpClientFactory)
         {
             _newsTrekDbContext = newsTrekDbContext;
             _redisCacheManager = redisCacheManager;
             _jwtParseService = jwtParseService;
+            _httpClientFactory = httpClientFactory;
         }
 
         // Crawler the vocabulary HTML structure
@@ -93,8 +96,16 @@ namespace newstrek.Services
             return false; // Vocabulary was not found or deleted
         }
 
-        public async Task<dynamic> LookUPWebsterDictionaryAsync(string word, HttpResponseMessage response)
+        public async Task<dynamic> LookUPWebsterDictionaryAsync(string word)
         {
+            // Key for Collegiate® Dictionary with Audio
+            string? DictionaryApiKey = Environment.GetEnvironmentVariable("DictionaryApiKey");
+            string? DictionaryRequestUrl = $"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{word}?key={DictionaryApiKey}";
+            // Create an HttpClient instance using the factory
+            var httpClient = _httpClientFactory.CreateClient();
+            // Send the request to Webster Collegiate® Dictionary with Audio API
+            var response = await httpClient.GetAsync(DictionaryRequestUrl);
+
             string responseBody = await response.Content.ReadAsStringAsync();
 
             dynamic result = JsonSerializer.Deserialize<dynamic>(responseBody);

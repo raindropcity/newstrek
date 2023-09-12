@@ -89,32 +89,14 @@ namespace crawler_test.Controllers
         }
 
         /* 串接英文辭典API */
-        // Key for Collegiate® Dictionary with Audio
-        string? DictionaryApiKey = Environment.GetEnvironmentVariable("DictionaryApiKey");
-
         [HttpGet("look-up-words")]
         public async Task<IActionResult> LookUpWords(string word)
         {
-            string? DictionaryRequestUrl = $"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{word}?key={DictionaryApiKey}";
-
             try
             {
-                // Create an HttpClient instance using the factory
-                var httpClient = _httpClientFactory.CreateClient();
-                // Send the request to Webster Collegiate® Dictionary with Audio API
-                var response = await httpClient.GetAsync(DictionaryRequestUrl);
+                dynamic result = await _vocabularyService.LookUPWebsterDictionaryAsync(word);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    dynamic result = await _vocabularyService.LookUPWebsterDictionaryAsync(word, response);
-
-                    return Ok(result);
-                }
-                else
-                {
-                    // Handle non-success status codes
-                    return StatusCode((int)response.StatusCode);
-                }
+                return Ok(result);
             }
             catch (Exception ex)
             {
