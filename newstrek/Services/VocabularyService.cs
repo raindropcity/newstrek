@@ -1,5 +1,7 @@
 ﻿using AngleSharp;
+using Microsoft.EntityFrameworkCore;
 using newstrek.Data;
+using newstrek.Models;
 
 namespace newstrek.Services
 {
@@ -7,11 +9,13 @@ namespace newstrek.Services
     {
         private readonly NewsTrekDbContext _newsTrekDbContext;
         private readonly RedisCacheManager _redisCacheManager;
+        private readonly JwtParseService _jwtParseService;
 
-        public VocabularyService (NewsTrekDbContext newsTrekDbContext, RedisCacheManager redisCacheManager)
+        public VocabularyService (NewsTrekDbContext newsTrekDbContext, RedisCacheManager redisCacheManager, JwtParseService jwtParseService)
         {
             _newsTrekDbContext = newsTrekDbContext;
             _redisCacheManager = redisCacheManager;
+            _jwtParseService = jwtParseService;
         }
 
         // Crawler the vocabulary HTML structure
@@ -41,6 +45,50 @@ namespace newstrek.Services
             }
 
             return htmlStructure;
+        }
+
+        public async Task<bool> SaveVocabularyIfNotExistsAsync(string word)
+        {
+            var userId = _jwtParseService.ParseUserId();
+
+            // Check if the vocabulary already exists
+            bool vocabularyExists = await _newsTrekDbContext.Vocabularies
+                .AnyAsync(v => v.Word == word && v.UserId == userId);
+
+            if (!vocabularyExists)
+            {
+                // If it doesn't exist, add it to the database
+                _newsTrekDbContext.Vocabularies.Add(new Vocabulary { Word = word, UserId = userId });
+                await _newsTrekDbContext.SaveChangesAsync();
+
+                return true; // Indicates that the vocabulary was added
+            }
+
+            return false; // Indicates that the vocabulary already exists
+        }
+
+        public async Task<bool> DeleteVocabularyAsync(string word)
+        {
+            var email = _jwtParseService.ParseEmail();
+
+            var user = await _newsTrekDbContext.Users
+            .Where(u => u.Email == email)
+            .Include(u => u.Vocabularies)
+            .FirstOrDefaultAsync();
+
+            if (user != null)
+            {
+                var vocabularyToDelete = user.Vocabularies.FirstOrDefault(v => v.Word == word);
+
+                if (vocabularyToDelete != null)
+                {
+                    _newsTrekDbContext.Vocabularies.Remove(vocabularyToDelete);
+                    await _newsTrekDbContext.SaveChangesAsync();
+                    return true; // Vocabulary was deleted
+                }
+            }
+
+            return false; // Vocabulary was not found or deleted
         }
     }
 }

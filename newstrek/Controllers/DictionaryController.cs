@@ -128,24 +128,21 @@ namespace crawler_test.Controllers
         [HttpPost("save-vocabulary")]
         public async Task<IActionResult> SaveVocabulary([FromQuery] string? word)
         {
-            var userId = _jwtParseService.ParseUserId();
-
-            if (userId == 0)
+            try
             {
-                return BadRequest("userId claim is missing or invalid");
+                bool saveVocabulary = await _vocabularyService.SaveVocabularyIfNotExistsAsync(word);
+
+                if (saveVocabulary)
+                {
+                    return Ok(new { response = $"Vocabulary \"{word}\" saved" });
+                }
+
+                return Ok(new { response = $"Vocabulary \"{word}\" is already saved in database" });
             }
-
-            bool vocabularyIsExist = await _newsTrekDbContext.Vocabularies.AnyAsync(v => v.Word == word && v.UserId == userId);
-
-            if (!vocabularyIsExist)
+            catch (Exception e)
             {
-                await _newsTrekDbContext.Vocabularies.AddAsync(new Vocabulary { Word = word, UserId = userId });
-                await _newsTrekDbContext.SaveChangesAsync();
-
-                return Ok(new { response = $"Vocabulary \"{word}\" saved" });
+                return BadRequest(e.Message);
             }
-
-            return Ok(new { response = $"Vocabulary \"{word}\" is already saved in database" });
         }
 
         [HttpDelete("delete-saved-vocabulary")]
@@ -153,19 +150,16 @@ namespace crawler_test.Controllers
         {
             try
             {
-                var email = _jwtParseService.ParseEmail();
+                bool vocabularyDeleted = await _vocabularyService.DeleteVocabularyAsync(word);
 
-                var vocabularyToDelete = await _newsTrekDbContext.Users
-                    .Where(u => u.Email == email)
-                    .SelectMany(u => u.Vocabularies)
-                    .Where(v => v.Word == word)
-                    .FirstOrDefaultAsync();
-
-                // "Remove" method does not return a task that can be awaited. It's a synchronous operation, and you don't need to await it
-                _newsTrekDbContext.Vocabularies.Remove(vocabularyToDelete);
-                await _newsTrekDbContext.SaveChangesAsync();
-
-                return Ok(new { Result = "Deletion complete" });
+                if (vocabularyDeleted)
+                {
+                    return Ok(new { Result = $"Vocabulary \"{word}\" deleted" });
+                }
+                else
+                {
+                    return BadRequest(new { Result = $"Vocabulary \"{word}\" not found" });
+                }
             }
             catch (Exception ex)
             {
