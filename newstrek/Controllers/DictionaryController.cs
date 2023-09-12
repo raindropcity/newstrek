@@ -106,9 +106,7 @@ namespace crawler_test.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    string responseBody = await response.Content.ReadAsStringAsync();
-
-                    dynamic result = JsonSerializer.Deserialize<dynamic>(responseBody);
+                    dynamic result = await _vocabularyService.LookUPWebsterDictionaryAsync(word, response);
 
                     return Ok(result);
                 }

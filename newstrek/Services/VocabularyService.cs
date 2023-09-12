@@ -1,7 +1,9 @@
 ﻿using AngleSharp;
+using Azure;
 using Microsoft.EntityFrameworkCore;
 using newstrek.Data;
 using newstrek.Models;
+using System.Text.Json;
 
 namespace newstrek.Services
 {
@@ -89,6 +91,15 @@ namespace newstrek.Services
             }
 
             return false; // Vocabulary was not found or deleted
+        }
+
+        public async Task<dynamic> LookUPWebsterDictionaryAsync(string word, HttpResponseMessage response)
+        {
+            string responseBody = await response.Content.ReadAsStringAsync();
+
+            dynamic result = JsonSerializer.Deserialize<dynamic>(responseBody);
+
+            return result;
         }
     }
 }
