@@ -25,7 +25,8 @@
 .ldoceEntry .tooltip,
 .ldoceEntry img,
 .ldoceEntry .topics_container,
-.ldoceEntry .FREQ {
+.ldoceEntry .FREQ,
+.ldoceEntry .newline {
   display: none;
 }
 

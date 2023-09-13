@@ -1,7 +1,7 @@
-﻿using newstrek.Services;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using newstrek.Interfaces;
 
 namespace crawler_test.Controllers
 {
@@ -19,18 +19,13 @@ namespace crawler_test.Controllers
             _openAiService = openAiService;
         }
 
-        [HttpPost("CompleteSentence")]
+        [HttpPost("complete-sentence")]
         public async Task<IActionResult> CompleteSentence ([FromBody] HashSet<string> vocabularyList)
         {
             try
             {
-                string text = string.Join(", ", vocabularyList);
-                string question = $"Make a compelete sentence by: {text}.";
-                Console.WriteLine (question);
-
-                // make a request to OpenAi and get the response
-                var result = await _openAiService.CompleteSentence(question);
-                Console.WriteLine (result);
+                var result = await _openAiService.MakeSentenceAsync(vocabularyList);
+                
                 return Ok(new { Result = result });
             }
             catch (SecurityTokenExpiredException)

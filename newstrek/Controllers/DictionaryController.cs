@@ -1,32 +1,29 @@
 ﻿using newstrek.Data;
 using Microsoft.AspNetCore.Mvc;
-using AngleSharp;
-using AngleSharp.Dom;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
-using System.Text.Json;
-using System.IdentityModel.Tokens.Jwt;
-using newstrek.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using newstrek.Services;
 
 namespace crawler_test.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class DictionaryController : ControllerBase
     {
         private readonly NewsTrekDbContext _newsTrekDbContext;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly RedisCacheManager _redisCacheManager;
+        private readonly VocabularyService _vocabularyService;
+        private readonly JwtParseService _jwtParseService;
 
-        public DictionaryController (NewsTrekDbContext newsTrekDbContext, IHttpClientFactory httpClientFactory, RedisCacheManager redisCacheManager)
+        public DictionaryController (NewsTrekDbContext newsTrekDbContext, IHttpClientFactory httpClientFactory, RedisCacheManager redisCacheManager, VocabularyService vocabularyService, JwtParseService jwtParseService)
         {
             _newsTrekDbContext = newsTrekDbContext;
             _httpClientFactory = httpClientFactory;
             _redisCacheManager = redisCacheManager;
+            _vocabularyService = vocabularyService;
+            _jwtParseService = jwtParseService;
         }
 
         // 爬蟲英文辭典網頁HTML結構
@@ -36,25 +33,10 @@ namespace crawler_test.Controllers
             try
             {
                 var cacheKey = $"MerriamWebster_{word}";
-                // Check if the result is cached
-                string? htmlStructure = await _redisCacheManager.GetStringAsync(cacheKey);
+                var address = $"https://www.merriam-webster.com/dictionary/{word}";
+                var className = ".entry-word-section-container";
 
-                if (htmlStructure == null)
-                {
-                    var config = Configuration.Default.WithDefaultLoader();
-                    var address = $"https://www.merriam-webster.com/dictionary/{word}";
-                    var context = BrowsingContext.New(config);
-                    var document = await context.OpenAsync(address);
-
-                    var def = document.QuerySelectorAll(".entry-word-section-container");
-                    htmlStructure = "";
-                    foreach (var item in def)
-                    {
-                        htmlStructure += item.OuterHtml;
-                    }
-                    // Store the result in cache
-                    await _redisCacheManager.SetStringAsync(cacheKey, htmlStructure);
-                }
+                var htmlStructure = await _vocabularyService.VocabularyCrawlerAsync(cacheKey, address, className);
 
                 return Ok(htmlStructure);
             }
@@ -78,25 +60,10 @@ namespace crawler_test.Controllers
             try
             {
                 var cacheKey = $"Longman_{word}";
-                // Check if the result is cached
-                string? htmlStructure = await _redisCacheManager.GetStringAsync(cacheKey);
+                var address = $"https://www.ldoceonline.com/dictionary/{word}";
+                var className = ".ldoceEntry";
 
-                if (htmlStructure == null)
-                {
-                    var config = Configuration.Default.WithDefaultLoader();
-                    var address = $"https://www.ldoceonline.com/dictionary/{word}";
-                    var context = BrowsingContext.New(config);
-                    var document = await context.OpenAsync(address);
-
-                    var def = document.QuerySelectorAll(".ldoceEntry");
-                    htmlStructure = "";
-                    foreach (var item in def)
-                    {
-                        htmlStructure += item.OuterHtml;
-                    }
-                    // Store the result in cache
-                    await _redisCacheManager.SetStringAsync(cacheKey, htmlStructure);
-                }
+                var htmlStructure = await _vocabularyService.VocabularyCrawlerAsync(cacheKey, address, className);
 
                 return Ok(htmlStructure);
             }
@@ -115,37 +82,22 @@ namespace crawler_test.Controllers
         }
 
         /* 串接英文辭典API */
-        // Key for Collegiate® Dictionary with Audio / Collegiate® Thesaurus API
-        string? DictionaryApiKey = Environment.GetEnvironmentVariable("DictionaryApiKey");
-        //string? ThesaurusApiKey = Environment.GetEnvironmentVariable("ThesaurusApiKey");
-
-        //string? wordnikApiKey = Environment.GetEnvironmentVariable("wordnikApiKey");
-
         [HttpGet("look-up-words")]
         public async Task<IActionResult> LookUpWords(string word)
         {
-            string? DictionaryRequestUrl = $"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{word}?key={DictionaryApiKey}";
-
             try
             {
-                // Create an HttpClient instance using the factory
-                var httpClient = _httpClientFactory.CreateClient();
-                // Send the request to Webster Collegiate® Dictionary with Audio API
-                var response = await httpClient.GetAsync(DictionaryRequestUrl);
+                dynamic result = await _vocabularyService.LookUPWebsterDictionaryAsync(word);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    string responseBody = await response.Content.ReadAsStringAsync();
-
-                    dynamic result = JsonSerializer.Deserialize<dynamic>(responseBody);
-
-                    return Ok(result);
-                }
-                else
-                {
-                    // Handle non-success status codes
-                    return StatusCode((int)response.StatusCode);
-                }
+                return Ok(result);
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized, "The authentication token has expired.");
+            }
+            catch (SecurityTokenValidationException)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "The authentication token is invalid.");
             }
             catch (Exception ex)
             {
@@ -157,32 +109,29 @@ namespace crawler_test.Controllers
         [HttpPost("save-vocabulary")]
         public async Task<IActionResult> SaveVocabulary([FromQuery] string? word)
         {
-            string authorizationHeader = HttpContext.Request.Headers["Authorization"];
-            if (authorizationHeader != null && authorizationHeader.StartsWith("Bearer "))
+            try
             {
-                // extracts the JWT token from the header by removing the first 7 characters ("Bearer ")
-                string jwtToken = authorizationHeader.Substring(7);
+                bool saveVocabulary = await _vocabularyService.SaveVocabularyIfNotExistsAsync(word);
 
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var jwtTokenObject = tokenHandler.ReadJwtToken(jwtToken);
-
-                // Extract the user id involved in JWT
-                var userIdClaim = jwtTokenObject.Claims.Where(c => c.Type.Contains("nameidentifier")).Select(s => s.Value).ToList();
-                Console.WriteLine(userIdClaim);
-                bool vocabularyIsExist = await _newsTrekDbContext.Vocabularies.AnyAsync(v => v.Word == word && v.UserId == long.Parse(userIdClaim[0]));
-
-                if (!vocabularyIsExist)
+                if (saveVocabulary)
                 {
-                    await _newsTrekDbContext.Vocabularies.AddAsync(new Vocabulary { Word = word, UserId = long.Parse(userIdClaim[0]) });
-                    await _newsTrekDbContext.SaveChangesAsync();
-
                     return Ok(new { response = $"Vocabulary \"{word}\" saved" });
                 }
 
                 return Ok(new { response = $"Vocabulary \"{word}\" is already saved in database" });
             }
-
-            return BadRequest("userId claim is missing or invalid");
+            catch (SecurityTokenExpiredException)
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized, "The authentication token has expired.");
+            }
+            catch (SecurityTokenValidationException)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "The authentication token is invalid.");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpDelete("delete-saved-vocabulary")]
@@ -190,20 +139,24 @@ namespace crawler_test.Controllers
         {
             try
             {
-                var userIdentity = HttpContext.User.Identity as ClaimsIdentity;
-                var email = userIdentity.FindFirst(ClaimTypes.Email)?.Value;
+                bool vocabularyDeleted = await _vocabularyService.DeleteVocabularyAsync(word);
 
-                var vocabularyToDelete = await _newsTrekDbContext.Users
-                    .Where(u => u.Email == email)
-                    .SelectMany(u => u.Vocabularies)
-                    .Where(v => v.Word == word)
-                    .FirstOrDefaultAsync();
-
-                // "Remove" method does not return a task that can be awaited. It's a synchronous operation, and you don't need to await it
-                _newsTrekDbContext.Vocabularies.Remove(vocabularyToDelete);
-                await _newsTrekDbContext.SaveChangesAsync();
-
-                return Ok(new { Result = "Deletion complete" });
+                if (vocabularyDeleted)
+                {
+                    return Ok(new { Result = $"Vocabulary \"{word}\" deleted" });
+                }
+                else
+                {
+                    return BadRequest(new { Result = $"Vocabulary \"{word}\" not found" });
+                }
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized, "The authentication token has expired.");
+            }
+            catch (SecurityTokenValidationException)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "The authentication token is invalid.");
             }
             catch (Exception ex)
             {
