@@ -24,13 +24,8 @@ namespace crawler_test.Controllers
         {
             try
             {
-                string text = string.Join(", ", vocabularyList);
-                string question = $"Make a compelete sentence by: {text}.";
-                Console.WriteLine (question);
-
-                // make a request to OpenAi and get the response
-                var result = await _openAiService.CompleteSentence(question);
-                Console.WriteLine (result);
+                var result = await _openAiService.MakeSentenceAsync(vocabularyList);
+                
                 return Ok(new { Result = result });
             }
             catch (SecurityTokenExpiredException)
