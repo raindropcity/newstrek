@@ -78,7 +78,7 @@
             };
 
             if (category) {
-                fetch(`/ElasticSearch/search-news-by-category?category=${category}`, { headers })
+                fetch(`/api/ElasticSearch/search-news-by-category?category=${category}`, { headers })
                     .then(response => {
                         if (response.status === 401) {
                             alert("Your sign in status has expired. Please sign in again.")
@@ -125,7 +125,7 @@
             }
 
             if (keyword) {
-                fetch(`/ElasticSearch/SearchNews?keyword=${keyword}`, { headers })
+                fetch(`/api/ElasticSearch/search-news?keyword=${keyword}`, { headers })
                     .then(response => {
                         if (response.status === 401) {
                             alert("Your sign in status has expired. Please sign in again.")

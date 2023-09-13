@@ -23,7 +23,7 @@
     }
 
     if (num) {
-        fetch(`/ElasticSearch/search-news-by-num?num=${num}`, { headers })
+        fetch(`/api/ElasticSearch/search-news-by-num?num=${num}`, { headers })
             .then(response => {
                 if (response.status === 401) {
                     alert("Your sign in status has expired. Please sign in again.")
@@ -124,7 +124,7 @@ function performLookup(vocabulary) {
         Authorization: `Bearer ${token}`
     }
 
-    fetch(`/Dictionary/look-up-words-crawler-Merriam-Webster?word=${vocabulary}`, { headers })
+    fetch(`/api/Dictionary/look-up-words-crawler-Merriam-Webster?word=${vocabulary}`, { headers })
         .then(response => {
             if (response.status === 401) {
                 alert("Your sign in status has expired. Please sign in again.")
@@ -153,7 +153,7 @@ function performLookup(vocabulary) {
             console.error('Error in GET request to crwal vocabulary in Merriam Webster', error);
         })
 
-    fetch(`/Dictionary/look-up-words-crawler-Longman?word=${vocabulary}`, { headers })
+    fetch(`/api/Dictionary/look-up-words-crawler-Longman?word=${vocabulary}`, { headers })
         .then(data => { 
             data.text().then((content) => {
                 if (content) defCard_2.innerHTML = content
@@ -175,7 +175,7 @@ defCard_1.addEventListener('click', (event) => {
     if (event.target === document.querySelector(".save-vocabulary-btn")) {
         const vocabulary = document.querySelector(".save-vocabulary-btn").getAttribute("data-word")
 
-        fetch(`/Dictionary/save-vocabulary?word=${vocabulary}`, {
+        fetch(`/api/Dictionary/save-vocabulary?word=${vocabulary}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

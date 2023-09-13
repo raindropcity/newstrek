@@ -7,6 +7,7 @@ using newstrek.Configurations;
 using newstrek.Services;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
+using newstrek.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,18 @@ builder.Services.AddDbContext<NewsTrekDbContext>(options => options.UseSqlServer
 builder.Services.AddSingleton<NewsCrawlerService>();
 
 builder.Services.AddHostedService<NewsCrawlerTimerService>();
+
+builder.Services.AddScoped<VocabularyService>();
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<JwtParseService>();
+
+builder.Services.AddScoped<ElasticSearchService>();
+
+builder.Services.AddScoped<MapObjectToListService>();
+
+builder.Services.AddScoped<UserService>();
 
 builder.Services.AddScoped<IOpenAiService, OpenAiService>();
 

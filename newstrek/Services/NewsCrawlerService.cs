@@ -1,7 +1,6 @@
 ﻿using AngleSharp;
 using newstrek.Data;
 using newstrek.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Nest;
 using System.Text;
