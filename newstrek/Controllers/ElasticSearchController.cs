@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Security.Claims;
 using newstrek.Services;
+using Microsoft.IdentityModel.Tokens;
 
 namespace newstrek.Controllers
 {
@@ -19,219 +20,119 @@ namespace newstrek.Controllers
         private readonly NewsTrekDbContext _newsTrekDbContext;
         private readonly IElasticClient _elasticClient;
         private readonly JwtParseService _jwtParseService;
-        public ElasticSearchController(IElasticClient elasticClient, NewsTrekDbContext newsTrekDbContext, JwtParseService jwtParseService)
+        private readonly ElasticSearchService _elasticSearchService;
+        public ElasticSearchController(IElasticClient elasticClient, NewsTrekDbContext newsTrekDbContext, JwtParseService jwtParseService, ElasticSearchService elasticSearchService)
         {
             _elasticClient = elasticClient;
             _newsTrekDbContext = newsTrekDbContext;
             _jwtParseService = jwtParseService;
+            _elasticSearchService = elasticSearchService;
         }
 
         [Authorize]
         [HttpGet("search-news")] // 要分查詢權重
-        public async Task<IActionResult> SearchNews(string keyword)
+        public async Task<IActionResult> SearchNewsAsync(string keyword)
         {
-            var results = await _elasticClient.SearchAsync<News>(
-                s => s.Query(
-                    q => q.QueryString(
-                        d => d.Query('*' + keyword + '*')
-                    )
-                ).Size(18) // give me the first 18 results
-            );
+            var results = await _elasticSearchService.ElasticSearchNewsAsync(keyword);
 
-            if (results.Documents.ToList().Count > 0)
+            try
             {
-                return Ok(new { response = "Query successfully", result = results.Documents.ToList() });
-            }
+                if (results.Documents.ToList().Count > 0)
+                {
+                    return Ok(new { response = "Query successfully", result = results.Documents.ToList() });
+                }
 
-            return Ok(new { response = "No query results, please check your keyword" });
+                return Ok(new { response = "No query results, please check your keyword" });
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized, "The authentication token has expired.");
+            }
+            catch (SecurityTokenValidationException)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "The authentication token is invalid.");
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Internal Server Error: " + e.Message);
+            }
         }
 
         [Authorize]
         [HttpGet("search-news-by-category")]
-        public async Task<IActionResult> SearchNewsBycategory(string category)
+        public async Task<IActionResult> SearchNewsBycategoryAsync(string category)
         {
-            Console.WriteLine(category);
-            var results = await _elasticClient.SearchAsync<News>(
-                s => s.Query(
-                    q => q.MultiMatch(m => m
-                        .Fields(f => f
-                            .Field(n => n.Category, boost: 2) // Boost the "category" field
-                            .Field(n => n.Tag, boost: 1)      // Boost the "tag" field
-                        )
-                        .Query(category)
-                    )
-                ).Size(18) // give me the first 18 results
-            );
+            try
+            {
+                var results = await _elasticSearchService.ElasticSearchNewsBycategoryAsync(category);
 
-            return Ok(results.Documents.ToList());
+                return Ok(results.Documents.ToList());
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized, "The authentication token has expired.");
+            }
+            catch (SecurityTokenValidationException)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "The authentication token is invalid.");
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Internal Server Error: " + e.Message);
+            }
         }
 
         [Authorize]
         [HttpGet("search-news-by-num")]
-        public async Task<IActionResult> SearchNewsByUrlNum(string num)
+        public async Task<IActionResult> SearchNewsByUrlNumAsync(string num)
         {
-            Console.WriteLine(num);
-            // URL是keyword，不能用Term
-            var result = await _elasticClient.SearchAsync<News>(
-                        s => s.Query(
-                        q => q.Wildcard(w => w
-                                .Field(f => f.URL)
-                                .Value('*' + num + '*')
-                            )
-                        )
-                    );
+            var result = await _elasticSearchService.ElasticSearchNewsByUrlNumAsync(num);
 
-            foreach (var item in result.Documents.ToList())
+            try
             {
-                Console.WriteLine(item);
-            }
-
-            return Ok(result.Documents.ToList());
-        }
-
-        [HttpPost("AddNewsToElasticSearch")]
-        public async Task<IActionResult> AddNews()
-        {
-            // Clear the "news" index in ElasticSearch first
-            var response = await _elasticClient.DeleteByQueryAsync<News>(d => d
-                .Index("news")
-                .Query(q => q.MatchAll())
-            );
-
-            if (!response.IsValid)
-            {
-                // Handle error
-                Console.WriteLine("Error deleting documents from Elasticsearch");
-            }
-            else
-            {
-                Console.WriteLine($"Deleted {response.Deleted} documents from Elasticsearch");
-            }
-
-            // Add the data from SQL Server to the "news" index in ElasticSearch
-            var newsFromSql = await _newsTrekDbContext.News.ToListAsync(); // Fetch news from SQL Server
-
-            foreach (var news in newsFromSql)
-            {
-                var indexResponse = await _elasticClient.IndexDocumentAsync(news);
-                if (!indexResponse.IsValid)
+                if (result.Documents.ToList().Count > 0)
                 {
-                    Console.WriteLine("something wrong about Transfer News To Elasticsearch");
+                    return Ok(result.Documents.ToList());
                 }
-            }
 
-            return Ok("Add news successfully");
+                return BadRequest("No query result");
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized, "The authentication token has expired.");
+            }
+            catch (SecurityTokenValidationException)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "The authentication token is invalid.");
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Internal Server Error: " + e.Message);
+            }
         }
 
         [Authorize]
         [HttpGet("recommend-news")]
-        public async Task<IActionResult> RecommendNews()
+        public async Task<IActionResult> RecommendNewsAsync()
         {
-            var email = _jwtParseService.ParseEmail();
-
-            if (email == "Email claim is missing or invalid")
+            try
             {
-                return BadRequest("Email claim is missing or invalid");
+                var recommendedNews = await _elasticSearchService.ElasticSearchRecommendNewsAsync();
+
+                return Ok(recommendedNews);
             }
-
-            // Use the extracted Email to query the specific user's InterestedTopic
-            var userInterestedTopic = await _newsTrekDbContext.Users.Where(u => u.Email == email).Select(s => s.InterestedTopic).ToListAsync();
-
-            // Try to iterate the object(must use System.Reflection)
-            Type objectType = typeof(InterestedTopic);
-            PropertyInfo[] properties = objectType.GetProperties();
-            List<string> selectedInterestedTopic = new List<string>();
-
-            foreach (PropertyInfo property in properties)
+            catch (SecurityTokenExpiredException)
             {
-                string propertyName = property.Name;
-                object propertyValue = property.GetValue(userInterestedTopic[0]);
-
-                // Check if propertyValue is a boolean and true
-                if (propertyValue is bool && (bool)propertyValue)
-                {
-                    // If the value is true, add its key into the List selectedInterestedTopic
-                    selectedInterestedTopic.Add(propertyName);
-                }
+                return StatusCode(StatusCodes.Status401Unauthorized, "The authentication token has expired.");
             }
-
-            var recommendedNews = await QueryRecommendedNews(selectedInterestedTopic);
-
-            return Ok(recommendedNews);
-        }
-
-        private async Task<List<News>> QueryRecommendedNews(List<string> selectedInterestedTopic)
-        {
-            List<ISearchResponse<News>> result = new List<ISearchResponse<News>>();
-            foreach (var item in selectedInterestedTopic)
+            catch (SecurityTokenValidationException)
             {
-                Console.WriteLine(item);
+                return StatusCode(StatusCodes.Status403Forbidden, "The authentication token is invalid.");
             }
-
-            if (selectedInterestedTopic.Count > 0)
+            catch (Exception e)
             {
-                foreach (var item in selectedInterestedTopic)
-                {
-                    var searchResponse = await _elasticClient.SearchAsync<News>(s => s
-                        .Query(q => q
-                            .MultiMatch(mm => mm
-                                .Fields(f => f
-                                    .Field(fld => fld.Category, boost: 2)
-                                    .Field(fld => fld.Article, boost: 1.5)
-                                    .Field(fld => fld.Title)
-                                )
-                                .Query(item)
-                            )
-                        )
-                        .Size(100)
-                    );
-
-                    result.Add(searchResponse);
-                }
+                return StatusCode(500, "Internal Server Error: " + e.Message);
             }
-            else
-            {
-                List<string> allTopic = new List<string>()
-                {
-                    "world", "business", "politics", "health", "climate", "tech", "entertainment", "science", "history", "sports"
-                };
-                foreach (var item in allTopic)
-                {
-                    var searchResponse = await _elasticClient.SearchAsync<News>(s => s
-                        .Query(q => q
-                            .MultiMatch(mm => mm
-                                .Fields(f => f
-                                    .Field(fld => fld.Category, boost: 2)
-                                    .Field(fld => fld.Article, boost: 1.5)
-                                    .Field(fld => fld.Title)
-                                )
-                                .Query(item)
-                            )
-                        )
-                        .Size(100)
-                    );
-
-                    result.Add(searchResponse);
-                }
-            }
-
-            List<News> allDocuments = result.SelectMany(response => response.Documents).ToList();
-
-            // Random 10 篇
-            Random random = new Random();
-            int numberOfRandomElements = 10;
-            List<News> randomNewsList = new List<News>();
-
-            while (randomNewsList.Count < numberOfRandomElements && allDocuments.Count > 0)
-            {
-                int randomIndex = random.Next(0, allDocuments.Count);
-                News randomNews = allDocuments[randomIndex];
-
-                randomNewsList.Add(randomNews);
-                allDocuments.RemoveAt(randomIndex); // Remove the selected news to avoid duplicates
-            }
-
-            return randomNewsList;
         }
     }
 }
