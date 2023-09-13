@@ -35,6 +35,8 @@ builder.Services.AddScoped<ElasticSearchService>();
 
 builder.Services.AddScoped<MapObjectToListService>();
 
+builder.Services.AddScoped<UserService>();
+
 builder.Services.AddScoped<IOpenAiService, OpenAiService>();
 
 builder.Services.AddElasticSearch(builder.Configuration);
