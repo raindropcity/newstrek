@@ -1,13 +1,7 @@
 ﻿using newstrek.Data;
-using newstrek.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Nest;
-using System.IdentityModel.Tokens.Jwt;
-using System.Reflection;
-using System.Text.Json;
-using System.Security.Claims;
 using newstrek.Services;
 using Microsoft.IdentityModel.Tokens;
 

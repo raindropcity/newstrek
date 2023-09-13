@@ -1,14 +1,7 @@
 ﻿using newstrek.Data;
 using Microsoft.AspNetCore.Mvc;
-using AngleSharp;
-using AngleSharp.Dom;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
-using System.Text.Json;
-using System.IdentityModel.Tokens.Jwt;
-using newstrek.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using newstrek.Services;
 
 namespace crawler_test.Controllers

@@ -2,7 +2,6 @@
 using Nest;
 using newstrek.Data;
 using newstrek.Models;
-using System.Reflection;
 
 namespace newstrek.Services
 {

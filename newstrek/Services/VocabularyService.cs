@@ -1,9 +1,7 @@
 ﻿using AngleSharp;
-using Azure;
 using Microsoft.EntityFrameworkCore;
 using newstrek.Data;
 using newstrek.Models;
-using System.Net.Http;
 using System.Text.Json;
 
 namespace newstrek.Services
