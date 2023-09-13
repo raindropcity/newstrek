@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,39 +11,10 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Reflection;
 using newstrek.Services;
+using newstrek.Dto;
 
 namespace newstrek.Controllers
 {
-    public class UserSignUpModel
-    {
-        public string Name { get; set; }
-        [EmailAddress]
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string ConfirmPassword { get; set; }
-        public InterestedTopicDto InterestedTopicDto { get; set; }
-    }
-
-    public class InterestedTopicDto
-    {
-        public bool? world { get; set; } = false;
-        public bool? business { get; set; } = false;
-        public bool? politics { get; set; } = false;
-        public bool? health { get; set; } = false;
-        public bool? climate { get; set; } = false;
-        public bool? tech { get; set; } = false;
-        public bool? entertainment { get; set; } = false;
-        public bool? science { get; set; } = false;
-        public bool? history { get; set; } = false;
-        public bool? sports { get; set; } = false;
-    }
-
-    public class UserSignInModel
-    {
-        public string Email { get; set; }
-        public string Password { get; set; }
-    }
-
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
